@@ -1,0 +1,4028 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="tool">
+  <meta name="design-style" content="nocturne">
+  <title>Dear my cosmos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@1.43.0/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+
+      /* Nocturne base tokens */
+      --background: #0a101d;
+      --surface-container-low: #0e1626;
+      --surface-container: #111b2e;
+      --surface-container-high: #17243c;
+      --on-surface: #f2ece1;
+      --on-surface-variant: #9ba8bf;
+      --outline: #384d73;
+      --outline-variant: #21304d;
+      --primary: #dfaa5b;
+      --on-primary: #0a101d;
+      --primary-container: #2b261c;
+      --on-primary-container: #f5dcb0;
+      --secondary: #687a99;
+      --tertiary: #7cc4e8;
+      --error: #f27474;
+      --on-error: #1a0606;
+      --positive: #52d19c;
+      --warning: #e8b85a;
+      --focus: #dfaa5b;
+
+      /* Data & Emotion tokens */
+      --data-1: #dfaa5b;
+      --data-2: #7cc4e8;
+      --data-3: #52d19c;
+      --data-4: #e07a5f;
+      --data-context: #4a5d80;
+      --emotion-warmth: #ff9a52;
+      --emotion-comfort: #6ec3f4;
+      --emotion-gratitude: #ffd166;
+      --admin-crimson: #d6455d;
+      --admin-crimson-bg: rgba(214, 69, 93, 0.16);
+      --admin-crimson-border: rgba(214, 69, 93, 0.48);
+
+      /* Paper / Letter surfaces */
+      --paper-cream: #f4ead5;
+      --paper-cream-edge: #e5d4b3;
+      --paper-cream-shadow: rgba(10, 16, 29, 0.55);
+      --paper-ink: #2c241b;
+      --paper-ink-muted: #6e5d49;
+      --paper-tear-patch: rgba(235, 220, 192, 0.92);
+
+      /* Glass & Overlay surfaces */
+      --hud-glass: rgba(14, 22, 38, 0.72);
+      --hud-glass-strong: rgba(17, 27, 46, 0.88);
+      --modal-backdrop: rgba(6, 10, 19, 0.72);
+      --title-glow: 0 2px 24px rgba(242, 236, 225, 0.28);
+      --brass-shadow: 0 8px 28px rgba(223, 170, 91, 0.18);
+      --panel-shadow: 0 20px 54px rgba(4, 8, 16, 0.65);
+
+      /* Fonts */
+      --font-headline: 'EB Garamond', 'Noto Serif KR', serif;
+      --font-body: 'Noto Sans KR', 'Plus Jakarta Sans', sans-serif;
+      --font-label: 'JetBrains Mono', 'Noto Sans KR', monospace;
+      --font-letter: 'Noto Serif KR', 'EB Garamond', serif;
+
+      /* Type scale */
+      --display-size: clamp(1.85rem, 1.35rem + 1.8vw, 2.75rem);
+      --headline-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+      --subhead-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+      --body-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);
+      --label-size: 0.75rem;
+
+      /* Spacing */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+
+      /* Radii & Effects */
+      --rounded: 0.375rem;
+      --rounded-lg: 0.75rem;
+      --rounded-xl: 1rem;
+      --rounded-full: 9999px;
+      --hairline: 1px solid var(--outline-variant);
+      --hairline-strong: 1px solid var(--outline);
+      --panel-highlight: inset 0 1px 0 rgba(242, 236, 225, 0.07);
+      --brass-glow: radial-gradient(circle at 88% 12%, rgba(223, 170, 91, 0.08), transparent 45%);
+      --sky-tint: color-mix(in srgb, var(--tertiary) 14%, transparent);
+      --brass-tint: color-mix(in srgb, var(--primary) 16%, transparent);
+      --heading-tracking: -0.015em;
+      --label-tracking: 0.06em;
+
+      /* Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.6;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    header {
+      position: static !important;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+      color: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* Fullscreen Interactive Sky & Terrain Stage */
+    .world-stage {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      min-height: 480px;
+      background-color: var(--background);
+    }
+
+    #cosmos-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    /* Foreground UI Overlay */
+    .hud-layer {
+      position: relative;
+      z-index: 10;
+      min-height: 100dvh;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: var(--space-lg);
+    }
+
+    .hud-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .cosmos-title {
+      margin: 0;
+      font-family: 'EB Garamond', serif;
+      font-weight: 500;
+      font-size: var(--display-size);
+      line-height: 1.08;
+      letter-spacing: var(--heading-tracking);
+      color: var(--on-surface);
+      text-shadow: var(--title-glow);
+      pointer-events: auto;
+    }
+
+    .hud-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      pointer-events: auto;
+    }
+
+    .hud-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      min-height: 44px;
+      min-width: 44px;
+      padding: var(--space-xs) var(--space-md);
+      background-color: var(--hud-glass);
+      border: var(--hairline);
+      border-radius: var(--rounded-full);
+      box-shadow: var(--panel-highlight);
+      color: var(--on-surface);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: background-color var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+    }
+
+    .hud-btn:hover {
+      background-color: var(--surface-container-high);
+      border-color: var(--outline);
+    }
+
+    .hud-btn:active {
+      transform: scale(0.97);
+    }
+
+    .hud-btn.is-active {
+      background-color: var(--brass-tint);
+      border-color: var(--primary);
+      color: var(--on-primary-container);
+    }
+
+    .hud-btn.admin-btn {
+      background-color: var(--admin-crimson-bg);
+      border-color: var(--admin-crimson-border);
+      color: var(--on-surface);
+    }
+
+    .hud-btn svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .badge-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 var(--space-xs);
+      border-radius: var(--rounded-full);
+      background-color: var(--brass-tint);
+      color: var(--primary);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 600;
+    }
+
+    .planet-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: var(--rounded-full);
+      background-color: var(--positive);
+      flex-shrink: 0;
+    }
+
+    /* Audio Popover Panel */
+    .audio-anchor {
+      position: relative;
+    }
+
+    .audio-popover {
+      position: absolute;
+      top: calc(100% + var(--space-sm));
+      right: 0;
+      width: min(310px, calc(100vw - 2rem));
+      background-color: var(--hud-glass-strong);
+      background-image: var(--brass-glow);
+      border: var(--hairline-strong);
+      border-radius: var(--rounded-lg);
+      box-shadow: var(--panel-shadow), var(--panel-highlight);
+      padding: var(--space-md);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: none;
+      flex-direction: column;
+      gap: var(--space-md);
+      z-index: 30;
+    }
+
+    .audio-popover.open {
+      display: flex;
+    }
+
+    .popover-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-sm);
+    }
+
+    .popover-title {
+      margin: 0;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--on-surface);
+    }
+
+    .bgm-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-xs);
+    }
+
+    .bgm-choice {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: var(--space-xs) var(--space-sm);
+      background-color: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+
+    .bgm-choice:hover {
+      background-color: var(--surface-container-high);
+    }
+
+    .bgm-choice.selected {
+      background-color: var(--brass-tint);
+      border-color: var(--primary);
+      color: var(--on-primary-container);
+    }
+
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .slider-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8125rem;
+      color: var(--on-surface-variant);
+    }
+
+    .slider-val {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--tertiary);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+      cursor: pointer;
+      height: 6px;
+    }
+
+    /* Bottom HUD & Virtual Joystick */
+    .hud-bottom {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--space-md);
+      width: 100%;
+    }
+
+    .joystick-cluster {
+      display: none;
+      align-items: center;
+      gap: var(--space-md);
+      pointer-events: auto;
+    }
+
+    .joystick-cluster.visible {
+      display: flex;
+    }
+
+    .joystick-base {
+      position: relative;
+      width: 108px;
+      height: 108px;
+      border-radius: var(--rounded-full);
+      background-color: var(--hud-glass);
+      border: var(--hairline-strong);
+      box-shadow: var(--panel-highlight);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      touch-action: none;
+    }
+
+    .joystick-knob {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 46px;
+      height: 46px;
+      margin-left: -23px;
+      margin-top: -23px;
+      border-radius: var(--rounded-full);
+      background-color: var(--primary);
+      box-shadow: var(--brass-shadow);
+      pointer-events: none;
+      transition: transform var(--dur-micro) var(--ease-out);
+    }
+
+    .jump-pad-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--rounded-full);
+      background-color: var(--hud-glass);
+      border: var(--hairline-strong);
+      color: var(--on-surface);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .jump-pad-btn:active {
+      background-color: var(--brass-tint);
+      border-color: var(--primary);
+    }
+
+    .toast-pill {
+      margin: 0 auto;
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: var(--rounded-full);
+      background-color: var(--hud-glass-strong);
+      border: var(--hairline-strong);
+      box-shadow: var(--panel-shadow);
+      color: var(--on-surface);
+      font-size: 0.875rem;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out);
+      pointer-events: none;
+      text-align: center;
+      max-width: min(440px, 90vw);
+    }
+
+    .toast-pill.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background-color: var(--modal-backdrop);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-md);
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: min(520px, 100%);
+      max-height: 88dvh;
+      overflow-y: auto;
+      background-color: var(--surface-container);
+      background-image: var(--brass-glow);
+      border: var(--hairline-strong);
+      border-radius: var(--rounded-xl);
+      box-shadow: var(--panel-shadow), var(--panel-highlight);
+      padding: var(--space-xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .modal-card.wide {
+      width: min(740px, 100%);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+    }
+
+    .modal-title {
+      margin: 0;
+      font-family: var(--font-headline);
+      font-size: var(--headline-size);
+      font-weight: 500;
+      color: var(--on-surface);
+    }
+
+    .close-icon-btn {
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: var(--rounded-full);
+      border: var(--hairline);
+      background-color: var(--surface-container-low);
+      color: var(--on-surface-variant);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .close-icon-btn:hover {
+      background-color: var(--surface-container-high);
+      color: var(--on-surface);
+    }
+
+    .field-block {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .field-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--on-surface-variant);
+    }
+
+    .field-required {
+      color: var(--primary);
+      margin-left: var(--space-xs);
+    }
+
+    .text-input, .text-area {
+      width: 100%;
+      padding: var(--space-sm) var(--space-md);
+      background-color: var(--background);
+      border: var(--hairline-strong);
+      border-radius: var(--rounded);
+      color: var(--on-surface);
+      font-size: var(--body-size);
+      line-height: 1.5;
+    }
+
+    .text-area {
+      min-height: 132px;
+      resize: vertical;
+    }
+
+    .form-feedback {
+      min-height: 1.25rem;
+      font-size: 0.875rem;
+      color: var(--error);
+      margin: 0;
+    }
+
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      margin-top: var(--space-xs);
+    }
+
+    .btn-primary, .btn-secondary, .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: var(--rounded);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      border: 1px solid var(--primary);
+      color: var(--on-primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--on-primary-container);
+    }
+
+    .btn-secondary {
+      background-color: var(--surface-container-high);
+      border: var(--hairline-strong);
+      color: var(--on-surface);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--outline-variant);
+    }
+
+    .btn-ghost {
+      background-color: transparent;
+      border: var(--hairline);
+      color: var(--on-surface-variant);
+    }
+
+    .btn-ghost:hover {
+      background-color: var(--surface-container-high);
+      color: var(--on-surface);
+    }
+
+    /* Reading Letter Card & Torn Cream Paper Effect */
+    .letter-paper {
+      position: relative;
+      padding: var(--space-xl);
+      background-color: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      font-family: var(--font-letter);
+      line-height: 1.85;
+      color: var(--on-surface);
+    }
+
+    .letter-paper.torn-cream {
+      background-color: var(--paper-cream);
+      color: var(--paper-ink);
+      border-color: var(--paper-cream-edge);
+      box-shadow: 0 14px 36px var(--paper-cream-shadow);
+      clip-path: polygon(
+        0% 2%, 7% 0%, 15% 3%, 24% 0.5%, 35% 2.5%, 48% 0%, 60% 2%, 72% 0%, 84% 3%, 93% 1%, 100% 3%,
+        98% 15%, 100% 29%, 97.5% 43%, 100% 58%, 98% 74%, 100% 88%, 97% 98%,
+        86% 100%, 73% 97.5%, 61% 100%, 49% 98%, 34% 100%, 21% 97.5%, 9% 100%, 1% 97%,
+        2.5% 83%, 0% 69%, 2% 52%, 0% 36%, 2% 19%
+      );
+      padding: var(--space-xl) var(--space-lg);
+    }
+
+    .tear-scrap {
+      position: absolute;
+      pointer-events: none;
+      background-color: var(--paper-tear-patch);
+      border: 1px dashed var(--paper-cream-edge);
+      box-shadow: 0 4px 10px var(--paper-cream-shadow);
+    }
+
+    .tear-scrap-top {
+      top: 12%;
+      right: -6px;
+      width: 78px;
+      height: 36px;
+      transform: rotate(7deg);
+      clip-path: polygon(8% 0%, 100% 10%, 94% 92%, 0% 82%, 14% 46%);
+    }
+
+    .tear-scrap-bottom {
+      bottom: 14%;
+      left: -6px;
+      width: 88px;
+      height: 38px;
+      transform: rotate(-6deg);
+      clip-path: polygon(0% 12%, 90% 0%, 100% 78%, 74% 100%, 5% 86%);
+    }
+
+    .torn-concealed {
+      display: inline-block;
+      background-color: var(--paper-cream-edge);
+      color: transparent;
+      border-radius: var(--rounded);
+      padding: 0 var(--space-xs);
+      transform: rotate(-1.5deg);
+    }
+
+    .letter-meta-line {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+      color: var(--primary);
+    }
+
+    .letter-paper.torn-cream .letter-meta-line {
+      color: var(--paper-ink-muted);
+    }
+
+    .letter-body-text {
+      margin: var(--space-sm) 0;
+      white-space: pre-wrap;
+      font-size: 1.0625rem;
+    }
+
+    .letter-from-line {
+      margin-top: var(--space-md);
+      text-align: right;
+      font-size: 0.9375rem;
+      color: var(--on-surface-variant);
+    }
+
+    .letter-paper.torn-cream .letter-from-line {
+      color: var(--paper-ink-muted);
+    }
+
+    .letter-source-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--rounded);
+      background-color: var(--sky-tint);
+      color: var(--tertiary);
+    }
+
+    /* Constellation Archive */
+    .constellation-sky {
+      position: relative;
+      width: 100%;
+      min-height: 240px;
+      height: 240px;
+      background-color: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      overflow: hidden;
+    }
+
+    #constellation-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: pointer;
+    }
+
+    .archive-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+      gap: var(--space-sm);
+      max-height: 240px;
+      overflow-y: auto;
+    }
+
+    .archive-item {
+      text-align: left;
+      padding: var(--space-md);
+      background-color: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      transition: border-color var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
+    }
+
+    .archive-item:hover, .archive-item.selected {
+      background-color: var(--surface-container-high);
+      border-color: var(--primary);
+    }
+
+    .archive-item-title {
+      font-weight: 600;
+      font-size: 0.9375rem;
+      color: var(--on-surface);
+    }
+
+    .archive-item-snippet {
+      font-size: 0.8125rem;
+      color: var(--on-surface-variant);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* 1:1 Chat & Emotion Stars Drawer */
+    .chat-box {
+      position: fixed;
+      right: var(--space-lg);
+      bottom: var(--space-lg);
+      z-index: 40;
+      width: min(350px, calc(100vw - 2rem));
+      background-color: var(--hud-glass-strong);
+      border: var(--hairline-strong);
+      border-radius: var(--rounded-xl);
+      box-shadow: var(--panel-shadow), var(--panel-highlight);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: var(--space-md);
+      display: none;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .chat-box.open {
+      display: flex;
+    }
+
+    .chat-messages {
+      height: 170px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      padding: var(--space-sm);
+      background-color: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+    }
+
+    .chat-bubble {
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--rounded);
+      font-size: 0.875rem;
+      max-width: 85%;
+    }
+
+    .chat-bubble.mine {
+      align-self: flex-end;
+      background-color: var(--brass-tint);
+      border: 1px solid var(--primary);
+      color: var(--on-surface);
+    }
+
+    .chat-bubble.theirs {
+      align-self: flex-start;
+      background-color: var(--surface-container-high);
+      border: var(--hairline);
+      color: var(--on-surface);
+    }
+
+    .emotion-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-xs);
+    }
+
+    .emotion-btn {
+      min-height: 44px;
+      padding: var(--space-xs);
+      border-radius: var(--rounded);
+      border: var(--hairline);
+      background-color: var(--surface-container-low);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+    }
+
+    .emotion-btn.warmth {
+      color: var(--emotion-warmth);
+    }
+
+    .emotion-btn.comfort {
+      color: var(--emotion-comfort);
+    }
+
+    .emotion-btn.gratitude {
+      color: var(--emotion-gratitude);
+    }
+
+    .emotion-btn:hover {
+      background-color: var(--surface-container-high);
+      border-color: var(--outline);
+    }
+
+    .chat-input-row {
+      display: flex;
+      align-items: flex-end;
+      gap: var(--space-xs);
+    }
+
+    /* Planet & Admin Lists */
+    .planet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+      gap: var(--space-sm);
+    }
+
+    .planet-card {
+      padding: var(--space-md);
+      background-color: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .planet-card.active {
+      border-color: var(--primary);
+      background-color: var(--brass-tint);
+    }
+
+    .admin-table-wrap {
+      max-height: 360px;
+      overflow-y: auto;
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      background-color: var(--background);
+    }
+
+    .admin-letter-row {
+      padding: var(--space-md);
+      border-bottom: var(--hairline);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .admin-letter-row:last-child {
+      border-bottom: none;
+    }
+
+    .mono-meta {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--tertiary);
+    }
+
+    .empty-state {
+      padding: var(--space-lg);
+      text-align: center;
+      color: var(--on-surface-variant);
+      background-color: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+    }
+
+    @media (max-width: 640px) {
+      .hud-layer {
+        padding: var(--space-md);
+      }
+
+      .hud-header {
+        align-items: center;
+      }
+
+      .hud-btn .btn-text-hide-sm {
+        display: none;
+      }
+
+      .modal-card {
+        padding: var(--space-lg);
+      }
+
+      .chat-box {
+        right: var(--space-md);
+        bottom: var(--space-md);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="world-stage">
+    <canvas id="cosmos-canvas" aria-label="Dear my cosmos 밤하늘과 호수"></canvas>
+  </div>
+
+  <div class="hud-layer">
+    <header class="hud-header">
+      <h1 class="cosmos-title">Dear my cosmos</h1>
+
+      <div class="hud-actions">
+        <button type="button" class="hud-btn" id="btn-planet" onclick="openPlanetModal()" aria-label="행성 및 여행자 정보">
+          <span class="planet-dot" aria-hidden="true"></span>
+          <span id="hud-planet-label">Planet 1</span>
+          <span class="badge-count" id="hud-player-count">1/5</span>
+        </button>
+
+        <button type="button" class="hud-btn" id="btn-archive" onclick="openArchiveModal()" aria-label="별자리 보관함 열기">
+          <i data-lucide="sparkles" aria-hidden="true"></i>
+          <span class="btn-text-hide-sm">별자리 보관함</span>
+          <span class="badge-count" id="hud-archive-count">0</span>
+        </button>
+
+        <button type="button" class="hud-btn" id="btn-joystick-toggle" onclick="toggleJoystickVisibility()" aria-label="모바일 조이스틱 전환">
+          <i data-lucide="gamepad-2" aria-hidden="true"></i>
+        </button>
+
+        <button type="button" class="hud-btn admin-btn" id="btn-admin-panel" onclick="openAdminModal()" style="display: none;" aria-label="관리자 데이터베이스 열기">
+          <i data-lucide="shield" aria-hidden="true"></i>
+          <span class="btn-text-hide-sm">Admin</span>
+        </button>
+
+        <div class="audio-anchor">
+          <button type="button" class="hud-btn" id="btn-volume-icon" onclick="handleVolumeIconClick()" aria-label="사운드 설정 및 볼륨">
+            <i data-lucide="volume-2" id="volume-icon-svg" aria-hidden="true"></i>
+          </button>
+
+          <div class="audio-popover" id="audio-popover" role="dialog" aria-label="오디오 설정">
+            <div class="popover-title-row">
+              <h2 class="popover-title">소리 및 배경음악</h2>
+              <button type="button" class="btn-ghost" id="btn-bgm-toggle" onclick="toggleAudioMute()" style="min-height: 36px; padding: 0 var(--space-sm);">
+                <span id="bgm-toggle-label">켜짐</span>
+              </button>
+            </div>
+
+            <div class="bgm-grid" role="radiogroup" aria-label="배경음악 선택">
+              <button type="button" class="bgm-choice selected" id="bgm-opt-piano" onclick="selectBgmTrack('piano')">
+                <span>부드러운 피아노</span>
+                <span class="mono-meta">Soft Piano</span>
+              </button>
+              <button type="button" class="bgm-choice" id="bgm-opt-musicbox" onclick="selectBgmTrack('musicbox')">
+                <span>밤의 오르골</span>
+                <span class="mono-meta">Night Music Box</span>
+              </button>
+              <button type="button" class="bgm-choice" id="bgm-opt-guitar" onclick="selectBgmTrack('guitar')">
+                <span>어쿠스틱 기타</span>
+                <span class="mono-meta">Acoustic Guitar</span>
+              </button>
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-label-row">
+                <label for="slider-bgm">배경음악 (BGM)</label>
+                <span class="slider-val" id="val-bgm">65%</span>
+              </div>
+              <input type="range" id="slider-bgm" min="0" max="100" value="65" oninput="updateVolumeSlider('bgm', this.value)">
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-label-row">
+                <label for="slider-sfx">효과음 (SFX)</label>
+                <span class="slider-val" id="val-sfx">75%</span>
+              </div>
+              <input type="range" id="slider-sfx" min="0" max="100" value="75" oninput="updateVolumeSlider('sfx', this.value)">
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-label-row">
+                <label for="slider-water">물 발자국 소리</label>
+                <span class="slider-val" id="val-water">70%</span>
+              </div>
+              <input type="range" id="slider-water" min="0" max="100" value="70" oninput="updateVolumeSlider('water', this.value)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="hud-bottom">
+      <div class="joystick-cluster" id="joystick-cluster">
+        <div class="joystick-base" id="joystick-base" aria-label="이동 조이스틱">
+          <div class="joystick-knob" id="joystick-knob"></div>
+        </div>
+        <button type="button" class="jump-pad-btn" id="btn-mobile-jump" onclick="triggerPlayerJump()">점프</button>
+      </div>
+
+      <div class="toast-pill" id="toast-pill" role="status" aria-live="polite"></div>
+
+      <div style="width: 1px;"></div>
+    </div>
+  </div>
+
+  <!-- Letter Writing Modal -->
+  <div class="modal-overlay" id="modal-write" role="dialog" aria-modal="true" aria-labelledby="write-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="write-modal-title">별의 궤도에 편지 남기기</h2>
+        <button type="button" class="close-icon-btn" onclick="closeWriteModal()" aria-label="닫기">
+          <i data-lucide="x" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="field-block">
+        <label class="field-label" for="write-to">To.<span class="field-required">*</span></label>
+        <input type="text" id="write-to" class="text-input" maxlength="40" placeholder="닿고 싶은 누군가, 혹은 미래의 나에게">
+      </div>
+
+      <div class="field-block">
+        <label class="field-label" for="write-content">Content<span class="field-required">*</span></label>
+        <textarea id="write-content" class="text-area" maxlength="500" placeholder="밤하늘의 궤도에 조용히 띄워 보낼 마음을 적어보세요."></textarea>
+      </div>
+
+      <div class="field-block">
+        <label class="field-label" for="write-from">From. (선택)</label>
+        <input type="text" id="write-from" class="text-input" maxlength="40" placeholder="이름이나 익명의 별빛">
+      </div>
+
+      <p class="form-feedback" id="write-error-msg"></p>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="submitStarLetter('keep')">간직하기</button>
+        <button type="button" class="btn-primary" onclick="submitStarLetter('send')">보내기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reading Modal -->
+  <div class="modal-overlay" id="modal-read" role="dialog" aria-modal="true" aria-labelledby="read-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="read-modal-title">내려앉은 별빛의 조각</h2>
+        <button type="button" class="close-icon-btn" onclick="closeReadModal()" aria-label="닫기">
+          <i data-lucide="x" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div>
+        <span class="letter-source-tag" id="read-source-tag">자연의 속삭임</span>
+      </div>
+
+      <div class="letter-paper" id="read-paper-box">
+        <div class="tear-scrap tear-scrap-top" id="tear-scrap-top" style="display: none;" aria-hidden="true"></div>
+        <div class="tear-scrap tear-scrap-bottom" id="tear-scrap-bottom" style="display: none;" aria-hidden="true"></div>
+        <div class="letter-meta-line" id="read-to-line"></div>
+        <div class="letter-body-text" id="read-body-text"></div>
+        <div class="letter-from-line" id="read-from-line"></div>
+      </div>
+
+      <div class="modal-actions" id="read-modal-actions">
+        <button type="button" class="btn-ghost" onclick="releaseCurrentReading()">놓아주기</button>
+        <button type="button" class="btn-primary" id="btn-read-keep" onclick="keepCurrentReading()">보관하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Constellation Archive Modal -->
+  <div class="modal-overlay" id="modal-archive" role="dialog" aria-modal="true" aria-labelledby="archive-modal-title">
+    <div class="modal-card wide">
+      <div class="modal-header">
+        <h2 class="modal-title" id="archive-modal-title">별자리 보관함</h2>
+        <button type="button" class="close-icon-btn" onclick="closeArchiveModal()" aria-label="닫기">
+          <i data-lucide="x" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="constellation-sky">
+        <canvas id="constellation-canvas" aria-label="저장된 별자리 지도"></canvas>
+      </div>
+
+      <div id="archive-list-wrap" class="archive-list"></div>
+    </div>
+  </div>
+
+  <!-- Planet & Profile Modal -->
+  <div class="modal-overlay" id="modal-planet" role="dialog" aria-modal="true" aria-labelledby="planet-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="planet-modal-title">행성 및 여행자 설정</h2>
+        <button type="button" class="close-icon-btn" onclick="closePlanetModal()" aria-label="닫기">
+          <i data-lucide="x" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="field-block">
+        <label class="field-label" for="player-name-input">내 여행자 이름</label>
+        <div class="chat-input-row">
+          <input type="text" id="player-name-input" class="text-input" maxlength="20" placeholder="여행자 이름">
+          <button type="button" class="btn-secondary" onclick="savePlayerName()">적용</button>
+        </div>
+      </div>
+
+      <div class="field-block">
+        <span class="field-label">현재 연결된 행성 목록 (행성당 최대 5명)</span>
+        <div class="planet-grid" id="planet-list-grid"></div>
+      </div>
+
+      <div class="modal-actions" style="justify-content: space-between;">
+        <button type="button" class="btn-ghost" onclick="simulateExtraTravelerJoin()">여행자 입장 시뮬레이션 (+1)</button>
+        <button type="button" class="btn-primary" onclick="closePlanetModal()">밤하늘로 돌아가기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Database Modal (Easter Egg) -->
+  <div class="modal-overlay" id="modal-admin" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title">
+    <div class="modal-card wide">
+      <div class="modal-header">
+        <h2 class="modal-title" id="admin-modal-title">Admin · 전역 편지 데이터베이스</h2>
+        <button type="button" class="close-icon-btn" onclick="closeAdminModal()" aria-label="닫기">
+          <i data-lucide="x" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-sm);">
+        <span class="mono-meta" id="admin-db-summary">전역 편지 0건 · 붉은 망토 활성화됨</span>
+        <button type="button" class="btn-secondary" onclick="adminSpawnFallingStar()">별똥별 즉시 낙하</button>
+      </div>
+
+      <div class="admin-table-wrap" id="admin-letter-list"></div>
+    </div>
+  </div>
+
+  <!-- 1:1 Chat Prompt Modal -->
+  <div class="modal-overlay" id="modal-chat-request" role="dialog" aria-modal="true" aria-labelledby="chat-req-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="chat-req-title">1:1 대화 요청</h2>
+        <button type="button" class="close-icon-btn" onclick="closeChatRequestModal()" aria-label="닫기">
+          <i data-lucide="x" aria-hidden="true"></i>
+        </button>
+      </div>
+      <p id="chat-req-desc" style="margin: 0; color: var(--on-surface-variant);"></p>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" onclick="closeChatRequestModal()">취소</button>
+        <button type="button" class="btn-primary" onclick="confirmSendChatRequest()">대화 요청 보내기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1:1 Active Whisper Chat Drawer -->
+  <div class="chat-box" id="chat-box" aria-label="1:1 속삭임 대화">
+    <div class="modal-header">
+      <span style="font-weight: 600;" id="chat-partner-label">여행자와의 대화</span>
+      <button type="button" class="close-icon-btn" onclick="closeActiveChat()" style="min-width: 36px; min-height: 36px;" aria-label="대화 닫기">
+        <i data-lucide="x" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div class="chat-messages" id="chat-messages"></div>
+
+    <div class="emotion-row">
+      <button type="button" class="emotion-btn warmth" onclick="sendEmotionStar('warmth')">주황빛 온기</button>
+      <button type="button" class="emotion-btn comfort" onclick="sendEmotionStar('comfort')">푸른빛 위로</button>
+      <button type="button" class="emotion-btn gratitude" onclick="sendEmotionStar('gratitude')">금빛 감사</button>
+    </div>
+
+    <div class="chat-input-row">
+      <div class="field-block" style="flex: 1;">
+        <label class="field-label" for="chat-input" style="font-size: 0.75rem;">메시지</label>
+        <input type="text" id="chat-input" class="text-input" maxlength="120" placeholder="조용한 인사를 건네보세요" onkeydown="if (event.key === 'Enter') sendChatMessage();">
+      </div>
+      <button type="button" class="btn-primary" onclick="sendChatMessage()" style="padding: var(--space-sm) var(--space-md);">전송</button>
+    </div>
+  </div>
+
+  <api-shim></api-shim>
+  <script>
+    /* =========================================================================
+       1. Pre-Registered Nature Encouragement Sentences (90% Falling Star Pool)
+       ========================================================================= */
+    const NATURE_SENTENCES = [
+      { to: `오늘 밤을 걷는 너에게`, content: `호수 위에 내려앉은 별빛처럼, 오늘의 무거운 마음도 물결을 따라 천천히 흩어질 거예요.` },
+      { to: `바람의 안부를 묻는 이에게`, content: `풀잎 끝에 맺힌 이슬은 작아도 온 밤하늘의 달빛을 다 품고 반짝입니다. 당신의 작은 걸음도 그러합니다.` },
+      { to: `잠시 멈춰 선 당신에게`, content: `어둠이 깊어야 반딧불이의 빛이 선명해지듯, 지금의 고요는 당신이 다시 빛날 준비를 하는 시간입니다.` },
+      { to: `밤의 언덕에 앉은 이에게`, content: `은하수는 서두르지 않아도 제 시간에 하늘을 건넙니다. 당신의 속도도 충분히 아름답습니다.` },
+      { to: `고요한 물결을 바라보는 너에게`, content: `바람이 풀을 눕히면 풀은 부러지지 않고 더 깊은 뿌리를 내립니다. 오늘을 견딘 당신이 참 고맙습니다.` },
+      { to: `별을 올려다보는 모든 이에게`, content: `저 멀리 떨어진 별빛도 수만 년을 건너 결국 당신의 눈동자에 닿았습니다. 당신의 진심도 언젠가 반드시 닿을 거예요.` },
+      { to: `달빛 아래 숨을 고르는 이에게`, content: `호수는 하늘이 어떤 색으로 변하든 묵묵히 그 빛을 닮아줍니다. 오늘 당신의 마음도 스스로를 다정히 비춰주길 바랍니다.` },
+      { to: `작은 풀벌레 소리를 듣는 너에게`, content: `아무도 보지 않는 깊은 밤에도 들꽃은 내일을 위해 꽃잎을 여밉니다. 당신의 노력은 결코 헛되지 않습니다.` },
+      { to: `유성우를 기다리는 이에게`, content: `짧게 스치고 사라지는 별똥별도 누군가의 소원을 품고 밤을 가릅니다. 당신의 작은 소망도 하늘이 기억할 거예요.` },
+      { to: `새벽을 앞둔 여행자에게`, content: `가장 짙은 남빛 하늘 끝에서 여명은 조용히 번져 나옵니다. 곧 당신의 아침에도 따뜻한 빛이 닿을 것입니다.` },
+      { to: `물가에 발을 담근 너에게`, content: `차가운 밤공기 속에서도 호수 밑바닥의 물은 계절을 견디며 맑아집니다. 지친 마음이 오늘 밤 조금은 가벼워지기를.` },
+      { to: `이름 모를 숲길을 걷는 이에게`, content: `반딧불이는 어디로 가야 할지 증명하지 않고 그저 자기 빛으로 어둠을 밝힐 뿐입니다. 당신도 당신의 빛으로 충분합니다.` }
+    ];
+
+    /* =========================================================================
+       2. Sky Color Palettes (Deep Indigo, Purple, Dark Navy, Romantic Pink)
+       ========================================================================= */
+    const SKY_PALETTES = [
+      {
+        name: `Deep Indigo`,
+        top: [10, 14, 38],
+        mid: [27, 34, 78],
+        horizon: [50, 56, 114]
+      },
+      {
+        name: `Mystical Purple`,
+        top: [18, 10, 38],
+        mid: [45, 25, 76],
+        horizon: [82, 45, 112]
+      },
+      {
+        name: `Dark Navy`,
+        top: [6, 12, 26],
+        mid: [14, 30, 58],
+        horizon: [28, 56, 94]
+      },
+      {
+        name: `Romantic Pink`,
+        top: [21, 13, 38],
+        mid: [58, 29, 68],
+        horizon: [132, 68, 98]
+      }
+    ];
+
+    const ACCESSORY_TYPES = [
+      `blue_scarf`,
+      `green_hat`,
+      `pink_ribbon`,
+      `yellow_tie`,
+      `blue_glasses`,
+      `none`
+    ];
+
+    const ACCESSORY_NAMES = {
+      blue_scarf: `파란 목도리`,
+      green_hat: `초록 모자`,
+      pink_ribbon: `분홍 리본`,
+      yellow_tie: `노란 넥타이`,
+      blue_glasses: `파란 안경`,
+      none: `망토`
+    };
+
+    /* =========================================================================
+       3. Application State
+       ========================================================================= */
+    const ROOM_CAP = 5;
+    const MAX_ORBITS_PER_ROOM = 9;
+    const SESSION_ID = `traveler_${Math.random().toString(36).slice(2, 9)}`;
+
+    const appState = {
+      playerName: `별빛 여행자`,
+      currentPlanet: 1,
+      isAdmin: false,
+      volumeClickCount: 0,
+      lastVolumeClickTime: 0,
+
+      // Persisted collections
+      globalUserLetters: [], // Global shared user letters (10% falling star pool + Admin DB)
+      archiveLetters: [],    // User letters kept via 보관하기 / 간직하기
+      paperBoats: [],        // Nature sentences kept via 보관하기 -> floating on lake
+
+      // Live room elements
+      orbitBatches: [],      // { id, curves: [...], fading, alpha }
+      fallenStars: [],       // Fallen stars waiting on hill or lake
+      shootingEffects: [],   // Departing written stars with glowing tails
+      fallingTrails: [],     // Active incoming falling star animations
+      meteors: [],           // Background ambient meteors
+      ripples: [],           // Water ripples
+      emotionParticles: [],  // Burst particles (warmth, comfort, gratitude)
+      releaseParticles: [],  // Light particles when releasing a letter
+      waterDroplets: [],     // Droplets falling from wet cloak
+
+      // Characters
+      player: {
+        xNorm: 0.28,
+        targetXNorm: 0.28,
+        yOffset: 0,
+        vy: 0,
+        facing: 1,
+        walkPhase: 0,
+        isJumping: false,
+        wetSeconds: 0,
+        wetRatio: 0,
+        inLake: false
+      },
+      otherPlayers: [],      // Real cross-tab peers + simulated room travelers
+      pendingInspect: null,  // Fallen star or paper boat player is walking toward
+      pendingInspectRef: null,
+
+      // Modals & Chat
+      activeOrbitStarRef: null,
+      activeReadingItem: null,
+      chatTargetPeer: null,
+      chatHistory: {},       // peerId -> [{ mine, text, ts }]
+      selectedArchiveId: null,
+
+      // Audio
+      audioMuted: false,
+      bgmTrack: `piano`,
+      volBgm: 0.65,
+      volSfx: 0.75,
+      volWater: 0.70,
+
+      // Controls
+      joystickVisible: false,
+      joystickAxisX: 0
+    };
+
+    /* =========================================================================
+       4. Persistence (notebookAppApi) & Cross-Tab Sync (BroadcastChannel)
+       ========================================================================= */
+    let broadcastChannel = null;
+    try {
+      if (typeof BroadcastChannel !== `undefined`) {
+        broadcastChannel = new BroadcastChannel(`dear_my_cosmos_rtdb_v1`);
+        broadcastChannel.onmessage = function (ev) {
+          handleRealtimeMessage(ev.data);
+        };
+      }
+    } catch (e) {
+      broadcastChannel = null;
+    }
+
+    async function loadPersistedState() {
+      try {
+        if (window.notebookAppApi && typeof window.notebookAppApi.getAppState === `function`) {
+          const saved = await window.notebookAppApi.getAppState();
+          if (saved && typeof saved === `object`) {
+            if (typeof saved.playerName === `string` && saved.playerName.trim()) {
+              appState.playerName = saved.playerName.trim();
+            }
+            if (Array.isArray(saved.globalUserLetters)) {
+              appState.globalUserLetters = saved.globalUserLetters;
+            }
+            if (Array.isArray(saved.archiveLetters)) {
+              appState.archiveLetters = saved.archiveLetters;
+            }
+            if (Array.isArray(saved.paperBoats)) {
+              appState.paperBoats = saved.paperBoats;
+            }
+            if (typeof saved.bgmTrack === `string`) {
+              appState.bgmTrack = saved.bgmTrack;
+            }
+            if (typeof saved.volBgm === `number`) appState.volBgm = saved.volBgm;
+            if (typeof saved.volSfx === `number`) appState.volSfx = saved.volSfx;
+            if (typeof saved.volWater === `number`) appState.volWater = saved.volWater;
+          }
+        }
+      } catch (err) {
+        // Proceed gracefully with clean initial state
+      }
+      syncAudioUiFromState();
+      updateHudBadges();
+    }
+
+    async function savePersistedState() {
+      try {
+        if (window.notebookAppApi && typeof window.notebookAppApi.setAppState === `function`) {
+          await window.notebookAppApi.setAppState({
+            playerName: appState.playerName,
+            globalUserLetters: appState.globalUserLetters.slice(-120),
+            archiveLetters: appState.archiveLetters.slice(-80),
+            paperBoats: appState.paperBoats.slice(-30),
+            bgmTrack: appState.bgmTrack,
+            volBgm: appState.volBgm,
+            volSfx: appState.volSfx,
+            volWater: appState.volWater
+          });
+        }
+      } catch (err) {
+        // Ignore transient shim errors
+      }
+    }
+
+    function broadcastEvent(payload) {
+      if (broadcastChannel) {
+        try {
+          broadcastChannel.postMessage(Object.assign({ senderId: SESSION_ID }, payload));
+        } catch (e) {}
+      }
+    }
+
+    /* =========================================================================
+       5. Planet Room Cap (Max 5 per room) & Multiplayer Travelers
+       ========================================================================= */
+    const peerDirectory = {}; // real cross-tab peers keyed by sessionId
+    const npcTravelers = [];  // peaceful fellow silhouette travelers for solo exploration
+    let simulatedOverflowCount = 0;
+
+    function initFellowTravelers() {
+      // Create 2 calm fellow silhouette travelers on Planet 1 so visitors immediately experience
+      // accessories, 1:1 chat prompts, and emotion star particles even without a second tab open.
+      // Note: Simulated travelers NEVER generate or send letters (0% AI letters).
+      npcTravelers.length = 0;
+      const presets = [
+        { id: `peer_sim_1`, name: `푸른 목도리 여행자`, planet: 1, xNorm: 0.17, targetXNorm: 0.17, accessory: `blue_scarf`, isNpc: true },
+        { id: `peer_sim_2`, name: `초록 모자 여행자`, planet: 1, xNorm: 0.44, targetXNorm: 0.44, accessory: `green_hat`, isNpc: true },
+        { id: `peer_sim_3`, name: `파란 안경 여행자`, planet: 1, xNorm: 0.63, targetXNorm: 0.63, accessory: `blue_glasses`, isNpc: true },
+        { id: `peer_sim_4`, name: `분홍 리본 여행자`, planet: 2, xNorm: 0.34, targetXNorm: 0.34, accessory: `pink_ribbon`, isNpc: true },
+        { id: `peer_sim_5`, name: `노란 넥타이 여행자`, planet: 2, xNorm: 0.68, targetXNorm: 0.68, accessory: `yellow_tie`, isNpc: true }
+      ];
+      for (let i = 0; i < presets.length; i++) {
+        const p = presets[i];
+        npcTravelers.push({
+          id: p.id,
+          name: p.name,
+          planet: p.planet,
+          xNorm: p.xNorm,
+          targetXNorm: p.targetXNorm,
+          yOffset: 0,
+          vy: 0,
+          facing: 1,
+          walkPhase: Math.random() * 6,
+          accessory: p.accessory,
+          wetRatio: 0,
+          isNpc: true,
+          nextMoveAt: performance.now() + 3000 + Math.random() * 5000
+        });
+      }
+    }
+
+    function getActiveRoomMembers(planetNum) {
+      const now = performance.now();
+      const list = [];
+      // Real cross-tab peers
+      const keys = Object.keys(peerDirectory);
+      for (let i = 0; i < keys.length; i++) {
+        const peer = peerDirectory[keys[i]];
+        if (now - peer.lastSeen < 8000 && peer.planet === planetNum) {
+          list.push(peer);
+        }
+      }
+      // Simulated fellow travelers
+      for (let i = 0; i < npcTravelers.length; i++) {
+        if (npcTravelers[i].planet === planetNum) {
+          list.push(npcTravelers[i]);
+        }
+      }
+      return list;
+    }
+
+    function assignPlanetRoomOnJoin() {
+      let planet = 1;
+      while (true) {
+        const peersInRoom = getActiveRoomMembers(planet);
+        const totalWithMe = peersInRoom.length + 1 + (planet === 1 ? simulatedOverflowCount : 0);
+        if (totalWithMe <= ROOM_CAP) {
+          appState.currentPlanet = planet;
+          break;
+        }
+        planet += 1;
+        if (planet > 10) {
+          appState.currentPlanet = planet;
+          break;
+        }
+      }
+      updateHudBadges();
+    }
+
+    function handleRealtimeMessage(msg) {
+      if (!msg || msg.senderId === SESSION_ID) return;
+      if (msg.type === `presence`) {
+        peerDirectory[msg.senderId] = {
+          id: msg.senderId,
+          name: msg.name || `여행자`,
+          planet: msg.planet || 1,
+          xNorm: typeof msg.xNorm === `number` ? msg.xNorm : 0.3,
+          targetXNorm: typeof msg.xNorm === `number` ? msg.xNorm : 0.3,
+          yOffset: msg.yOffset || 0,
+          facing: msg.facing || 1,
+          walkPhase: msg.walkPhase || 0,
+          accessory: msg.accessory || `blue_glasses`,
+          wetRatio: msg.wetRatio || 0,
+          isNpc: false,
+          lastSeen: performance.now()
+        };
+        updateHudBadges();
+      } else if (msg.type === `global_letter` && msg.letter) {
+        const exists = appState.globalUserLetters.some(function (l) { return l.id === msg.letter.id; });
+        if (!exists) {
+          appState.globalUserLetters.push(msg.letter);
+          savePersistedState();
+        }
+      } else if (msg.type === `chat_message` && msg.targetId === SESSION_ID) {
+        appendChatMessage(msg.senderId, false, msg.text, msg.senderName);
+        if (!appState.chatTargetPeer) {
+          const peer = peerDirectory[msg.senderId];
+          if (peer) openActiveChatWith(peer);
+        }
+      } else if (msg.type === `emotion_star` && msg.targetId === SESSION_ID) {
+        const peer = peerDirectory[msg.senderId];
+        if (peer) spawnEmotionBurst(peer.xNorm, appState.player.xNorm, msg.emotion);
+      }
+    }
+
+    const myPeerAccessory = ACCESSORY_TYPES[Math.floor(Math.random() * ACCESSORY_TYPES.length)];
+
+    function sendMyPresence() {
+      broadcastEvent({
+        type: `presence`,
+        name: appState.playerName,
+        planet: appState.currentPlanet,
+        xNorm: appState.player.xNorm,
+        yOffset: appState.player.yOffset,
+        facing: appState.player.facing,
+        walkPhase: appState.player.walkPhase,
+        accessory: myPeerAccessory,
+        wetRatio: appState.player.wetRatio
+      });
+    }
+
+    /* =========================================================================
+       6. Web Audio Synthesizer (BGM: Piano/MusicBox/Guitar + Violin + Xylophone + Water)
+       ========================================================================= */
+    let audioCtx = null;
+    let bgmGain = null;
+    let sfxGain = null;
+    let waterGain = null;
+    let bgmTimerId = null;
+    let bgmStep = 0;
+
+    function ensureAudioContext() {
+      if (!audioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return null;
+        audioCtx = new Ctx();
+        bgmGain = audioCtx.createGain();
+        sfxGain = audioCtx.createGain();
+        waterGain = audioCtx.createGain();
+        bgmGain.gain.value = appState.audioMuted ? 0 : appState.volBgm * 0.24;
+        sfxGain.gain.value = appState.audioMuted ? 0 : appState.volSfx * 0.35;
+        waterGain.gain.value = appState.audioMuted ? 0 : appState.volWater * 0.28;
+        bgmGain.connect(audioCtx.destination);
+        sfxGain.connect(audioCtx.destination);
+        waterGain.connect(audioCtx.destination);
+        startBgmLoop();
+      }
+      if (audioCtx.state === `suspended`) {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function applyAudioVolumes() {
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      if (bgmGain) bgmGain.gain.setTargetAtTime(appState.audioMuted ? 0 : appState.volBgm * 0.24, now, 0.06);
+      if (sfxGain) sfxGain.gain.setTargetAtTime(appState.audioMuted ? 0 : appState.volSfx * 0.35, now, 0.06);
+      if (waterGain) waterGain.gain.setTargetAtTime(appState.audioMuted ? 0 : appState.volWater * 0.28, now, 0.06);
+    }
+
+    function playBgmNote(freq, duration, timbre) {
+      if (!audioCtx || appState.audioMuted || appState.volBgm <= 0.01) return;
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const filter = audioCtx.createBiquadFilter();
+      const env = audioCtx.createGain();
+
+      if (timbre === `piano`) {
+        osc.type = `triangle`;
+        osc2.type = `sine`;
+        osc.frequency.setValueAtTime(freq, now);
+        osc2.frequency.setValueAtTime(freq * 2, now);
+        filter.type = `lowpass`;
+        filter.frequency.setValueAtTime(1400, now);
+        env.gain.setValueAtTime(0.0001, now);
+        env.gain.linearRampToValueAtTime(0.32, now + 0.025);
+        env.gain.exponentialRampToValueAtTime(0.001, now + duration);
+      } else if (timbre === `musicbox`) {
+        osc.type = `sine`;
+        osc2.type = `sine`;
+        osc.frequency.setValueAtTime(freq * 2, now);
+        osc2.frequency.setValueAtTime(freq * 4, now);
+        filter.type = `lowpass`;
+        filter.frequency.setValueAtTime(3600, now);
+        env.gain.setValueAtTime(0.0001, now);
+        env.gain.linearRampToValueAtTime(0.22, now + 0.008);
+        env.gain.exponentialRampToValueAtTime(0.0008, now + duration * 0.85);
+      } else {
+        // acoustic guitar
+        osc.type = `triangle`;
+        osc2.type = `sawtooth`;
+        osc.frequency.setValueAtTime(freq, now);
+        osc2.frequency.setValueAtTime(freq, now);
+        filter.type = `lowpass`;
+        filter.frequency.setValueAtTime(1900, now);
+        filter.frequency.exponentialRampToValueAtTime(520, now + duration * 0.7);
+        env.gain.setValueAtTime(0.0001, now);
+        env.gain.linearRampToValueAtTime(0.26, now + 0.012);
+        env.gain.exponentialRampToValueAtTime(0.001, now + duration * 0.9);
+      }
+
+      const subGain = audioCtx.createGain();
+      subGain.gain.value = timbre === `musicbox` ? 0.25 : 0.16;
+
+      osc.connect(filter);
+      osc2.connect(subGain);
+      subGain.connect(filter);
+      filter.connect(env);
+      env.connect(bgmGain);
+
+      osc.start(now);
+      osc2.start(now);
+      osc.stop(now + duration + 0.05);
+      osc2.stop(now + duration + 0.05);
+    }
+
+    function startBgmLoop() {
+      if (bgmTimerId) clearInterval(bgmTimerId);
+      const progression = [
+        [293.66, 440.00, 554.37, 659.25], // Dmaj9
+        [246.94, 369.99, 440.00, 587.33], // Bm7
+        [196.00, 293.66, 369.99, 493.88], // Gmaj7
+        [220.00, 329.63, 440.00, 554.37]  // A6
+      ];
+      bgmTimerId = setInterval(function () {
+        if (!audioCtx || audioCtx.state !== `running` || appState.audioMuted) return;
+        const bar = Math.floor(bgmStep / 4) % progression.length;
+        const noteIdx = bgmStep % 4;
+        const chord = progression[bar];
+        const freq = chord[noteIdx];
+        const dur = appState.bgmTrack === `musicbox` ? 1.6 : (appState.bgmTrack === `guitar` ? 1.8 : 2.3);
+        playBgmNote(freq, dur, appState.bgmTrack);
+        if (noteIdx === 0) {
+          playBgmNote(chord[0] * 0.5, dur * 1.2, appState.bgmTrack);
+        }
+        bgmStep += 1;
+      }, 780);
+    }
+
+    function playViolinHarmony(freq, delaySec) {
+      const ctx = ensureAudioContext();
+      if (!ctx || appState.audioMuted || appState.volSfx <= 0.01) return;
+      const start = ctx.currentTime + delaySec;
+      const dur = 2.4;
+
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const vibrato = ctx.createOscillator();
+      const vibratoGain = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+      const env = ctx.createGain();
+
+      osc1.type = `sawtooth`;
+      osc2.type = `triangle`;
+      osc1.frequency.setValueAtTime(freq, start);
+      osc2.frequency.setValueAtTime(freq * 1.002, start);
+
+      vibrato.frequency.setValueAtTime(5.2, start);
+      vibratoGain.gain.setValueAtTime(3.2, start);
+      vibrato.connect(vibratoGain);
+      vibratoGain.connect(osc1.frequency);
+      vibratoGain.connect(osc2.frequency);
+
+      filter.type = `bandpass`;
+      filter.frequency.setValueAtTime(freq * 2.1, start);
+      filter.Q.setValueAtTime(1.4, start);
+
+      env.gain.setValueAtTime(0.0001, start);
+      env.gain.linearRampToValueAtTime(0.18, start + 0.45);
+      env.gain.linearRampToValueAtTime(0.13, start + 1.5);
+      env.gain.exponentialRampToValueAtTime(0.0008, start + dur);
+
+      osc1.connect(filter);
+      osc2.connect(filter);
+      filter.connect(env);
+      env.connect(sfxGain);
+
+      osc1.start(start);
+      osc2.start(start);
+      vibrato.start(start);
+      osc1.stop(start + dur + 0.05);
+      osc2.stop(start + dur + 0.05);
+      vibrato.stop(start + dur + 0.05);
+    }
+
+    function playXylophoneChime() {
+      const ctx = ensureAudioContext();
+      if (!ctx || appState.audioMuted || appState.volSfx <= 0.01) return;
+      const notes = [783.99, 987.77, 1174.66];
+      for (let i = 0; i < notes.length; i++) {
+        const start = ctx.currentTime + i * 0.09;
+        const osc = ctx.createOscillator();
+        const over = ctx.createOscillator();
+        const env = ctx.createGain();
+        osc.type = `sine`;
+        over.type = `sine`;
+        osc.frequency.setValueAtTime(notes[i], start);
+        over.frequency.setValueAtTime(notes[i] * 3, start);
+        const overGain = ctx.createGain();
+        overGain.gain.value = 0.14;
+
+        env.gain.setValueAtTime(0.001, start);
+        env.gain.linearRampToValueAtTime(0.28, start + 0.01);
+        env.gain.exponentialRampToValueAtTime(0.0008, start + 0.85);
+
+        osc.connect(env);
+        over.connect(overGain);
+        overGain.connect(env);
+        env.connect(sfxGain);
+
+        osc.start(start);
+        over.start(start);
+        osc.stop(start + 0.9);
+        over.stop(start + 0.9);
+      }
+    }
+
+    function playSparkleChime(baseFreq) {
+      const ctx = ensureAudioContext();
+      if (!ctx || appState.audioMuted || appState.volSfx <= 0.01) return;
+      const start = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const env = ctx.createGain();
+      osc.type = `sine`;
+      osc.frequency.setValueAtTime(baseFreq || 880, start);
+      osc.frequency.exponentialRampToValueAtTime((baseFreq || 880) * 1.25, start + 0.35);
+      env.gain.setValueAtTime(0.001, start);
+      env.gain.linearRampToValueAtTime(0.2, start + 0.02);
+      env.gain.exponentialRampToValueAtTime(0.001, start + 0.55);
+      osc.connect(env);
+      env.connect(sfxGain);
+      osc.start(start);
+      osc.stop(start + 0.6);
+    }
+
+    let lastWaterSoundAt = 0;
+    function playWaterFootstep(intensity) {
+      const nowMs = performance.now();
+      if (nowMs - lastWaterSoundAt < 260) return;
+      lastWaterSoundAt = nowMs;
+
+      const ctx = ensureAudioContext();
+      if (!ctx || appState.audioMuted || appState.volWater <= 0.01) return;
+      const now = ctx.currentTime;
+
+      // Filtered white noise splash
+      const bufferSize = Math.floor(ctx.sampleRate * 0.16);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.35));
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = `bandpass`;
+      filter.frequency.setValueAtTime(900 + Math.random() * 450, now);
+      filter.Q.setValueAtTime(1.8, now);
+
+      const env = ctx.createGain();
+      const amp = 0.38 * (intensity || 1);
+      env.gain.setValueAtTime(amp, now);
+      env.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+
+      noise.connect(filter);
+      filter.connect(env);
+      env.connect(waterGain);
+      noise.start(now);
+
+      // Gentle water drop blip
+      const drop = ctx.createOscillator();
+      const dropEnv = ctx.createGain();
+      drop.type = `sine`;
+      drop.frequency.setValueAtTime(520 + Math.random() * 180, now + 0.02);
+      drop.frequency.exponentialRampToValueAtTime(980, now + 0.09);
+      dropEnv.gain.setValueAtTime(0.08 * (intensity || 1), now + 0.02);
+      dropEnv.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+      drop.connect(dropEnv);
+      dropEnv.connect(waterGain);
+      drop.start(now + 0.02);
+      drop.stop(now + 0.12);
+    }
+
+    /* =========================================================================
+       7. World Geometry, Sky Palettes, Stars, Orbits, Lake Reflections
+       ========================================================================= */
+    const canvas = document.getElementById(`cosmos-canvas`);
+    const ctx = canvas ? canvas.getContext(`2d`) : null;
+    let viewW = window.innerWidth;
+    let viewH = window.innerHeight;
+
+    // Sky palette cross-fade state
+    const skyState = {
+      fromIdx: 0,
+      toIdx: 1,
+      blend: 0,
+      lastSwitchAt: performance.now(),
+      holdMs: 22000,
+      fadeMs: 8000
+    };
+
+    const bgStars = [];
+    const grassBlades = [];
+    const fireflies = [];
+
+    function initAmbientSceneParticles() {
+      bgStars.length = 0;
+      for (let i = 0; i < 185; i++) {
+        bgStars.push({
+          xNorm: Math.random(),
+          yNorm: Math.random() * 0.67,
+          r: 0.6 + Math.random() * 1.7,
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.8 + Math.random() * 2.2,
+          tint: Math.random() < 0.25 ? `#dfaa5b` : (Math.random() < 0.45 ? `#7cc4e8` : `#f2ece1`)
+        });
+      }
+
+      grassBlades.length = 0;
+      for (let i = 0; i < 170; i++) {
+        grassBlades.push({
+          xNorm: 0.005 + (i / 170) * 0.545 + (Math.random() - 0.5) * 0.004,
+          len: 7 + Math.random() * 14,
+          lean: (Math.random() - 0.5) * 6,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+
+      fireflies.length = 0;
+      for (let i = 0; i < 24; i++) {
+        fireflies.push({
+          xNorm: 0.04 + Math.random() * 0.49,
+          yOffset: 10 + Math.random() * 68,
+          vx: (Math.random() - 0.5) * 0.00018,
+          vy: (Math.random() - 0.5) * 0.14,
+          phase: Math.random() * Math.PI * 2,
+          r: 1.5 + Math.random() * 1.8
+        });
+      }
+    }
+
+    function getShoreNorm() {
+      return 0.545;
+    }
+
+    function getWaterLevelY() {
+      return viewH * 0.725;
+    }
+
+    function getHillSurfaceY(x) {
+      const xNorm = x / Math.max(1, viewW);
+      const waterY = getWaterLevelY();
+      const shoreX = getShoreNorm() * viewW;
+
+      if (x <= shoreX) {
+        const t = xNorm / getShoreNorm(); // 0 (left) -> 1 (shore)
+        const hillPeak = viewH * 0.155;
+        const ridge = Math.cos(t * Math.PI * 0.92) * 0.5 + 0.5;
+        const undulation = Math.sin(t * Math.PI * 2.3) * 14;
+        return waterY - hillPeak * Math.pow(ridge, 1.15) - undulation * (1 - t);
+      }
+
+      // Lake bed gently dips beneath the water, rising slightly at right edge bank
+      const lakeT = Math.min(1, (xNorm - getShoreNorm()) / (1 - getShoreNorm()));
+      if (lakeT > 0.94) {
+        const bankT = (lakeT - 0.94) / 0.06;
+        return waterY + 12 * (1 - bankT) - bankT * 10;
+      }
+      const depth = Math.sin(lakeT * Math.PI) * 26;
+      return waterY + depth;
+    }
+
+    function getWalkableSurfaceY(x) {
+      const shoreX = getShoreNorm() * viewW;
+      const waterY = getWaterLevelY();
+      if (x <= shoreX) return getHillSurfaceY(x);
+      // Character wades gently in shallow lake surface
+      const lakeT = Math.min(1, (x / Math.max(1, viewW) - getShoreNorm()) / (1 - getShoreNorm()));
+      if (lakeT > 0.94) return getHillSurfaceY(x);
+      return waterY + 6 + Math.sin(lakeT * Math.PI) * 8;
+    }
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      viewW = window.innerWidth;
+      viewH = window.innerHeight;
+      canvas.width = Math.floor(viewW * dpr);
+      canvas.height = Math.floor(viewH * dpr);
+      if (ctx) {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+    }
+
+    function lerpRgb(c1, c2, t) {
+      const r = Math.round(c1[0] + (c2[0] - c1[0]) * t);
+      const g = Math.round(c1[1] + (c2[1] - c1[1]) * t);
+      const b = Math.round(c1[2] + (c2[2] - c1[2]) * t);
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function getCurrentSkyColors(now) {
+      const elapsed = now - skyState.lastSwitchAt;
+      if (elapsed > skyState.holdMs + skyState.fadeMs) {
+        skyState.fromIdx = skyState.toIdx;
+        let nextIdx = Math.floor(Math.random() * SKY_PALETTES.length);
+        if (nextIdx === skyState.fromIdx) {
+          nextIdx = (skyState.fromIdx + 1) % SKY_PALETTES.length;
+        }
+        skyState.toIdx = nextIdx;
+        skyState.lastSwitchAt = now;
+        skyState.blend = 0;
+      } else if (elapsed > skyState.holdMs) {
+        const rawT = (elapsed - skyState.holdMs) / skyState.fadeMs;
+        skyState.blend = rawT * rawT * (3 - 2 * rawT);
+      } else {
+        skyState.blend = 0;
+      }
+
+      const p1 = SKY_PALETTES[skyState.fromIdx];
+      const p2 = SKY_PALETTES[skyState.toIdx];
+      return {
+        top: lerpRgb(p1.top, p2.top, skyState.blend),
+        mid: lerpRgb(p1.mid, p2.mid, skyState.blend),
+        horizon: lerpRgb(p1.horizon, p2.horizon, skyState.blend)
+      };
+    }
+
+    /* =========================================================================
+       8. Orbits & Shooting Stars Logic
+       ========================================================================= */
+    const VIOLIN_SCALE = [293.66, 369.99, 440.00, 493.88, 554.37, 659.25, 739.99, 880.00];
+
+    function getTotalActiveOrbits() {
+      let total = 0;
+      for (let i = 0; i < appState.orbitBatches.length; i++) {
+        total += appState.orbitBatches[i].curves.length;
+      }
+      return total;
+    }
+
+    function evalOrbitPoint(curve, t) {
+      if (curve.isCircular) {
+        const angle = curve.startAngle + t * Math.PI * 2;
+        return {
+          x: (curve.cx + Math.cos(angle) * curve.rx) * viewW,
+          y: (curve.cy + Math.sin(angle) * curve.ry) * viewH
+        };
+      }
+      const mt = 1 - t;
+      const x = (mt * mt * curve.x0 + 2 * mt * t * curve.cx + t * t * curve.x1) * viewW;
+      const y = (mt * mt * curve.y0 + 2 * mt * t * curve.cy + t * t * curve.y1) * viewH;
+      return { x: x, y: y };
+    }
+
+    function spawnOrbitsAtSky(clickX, clickY) {
+      const currentTotal = getTotalActiveOrbits();
+      if (currentTotal >= MAX_ORBITS_PER_ROOM) {
+        showToast(`이 행성에는 최대 ${MAX_ORBITS_PER_ROOM}개의 궤도만 그릴 수 있어요.`);
+        return;
+      }
+
+      const desired = 2 + Math.floor(Math.random() * 3); // 2 to 4 curves
+      const count = Math.min(desired, MAX_ORBITS_PER_ROOM - currentTotal);
+      const now = performance.now();
+      const batchId = `batch_${now}_${Math.random().toString(36).slice(2, 6)}`;
+      const curves = [];
+
+      const clickXNorm = Math.max(0.1, Math.min(0.9, clickX / Math.max(1, viewW)));
+      const clickYNorm = Math.max(0.1, Math.min(0.54, clickY / Math.max(1, viewH)));
+
+      for (let i = 0; i < count; i++) {
+        const isCircular = Math.random() < 0.02; // 2% chance for circular orbit
+        const curveId = `curve_${batchId}_${i}`;
+        let curve;
+        if (isCircular) {
+          const rad = 0.09 + Math.random() * 0.09;
+          curve = {
+            id: curveId,
+            isCircular: true,
+            cx: Math.max(0.18, Math.min(0.82, clickXNorm + (Math.random() - 0.5) * 0.12)),
+            cy: Math.max(0.16, Math.min(0.45, clickYNorm + (Math.random() - 0.5) * 0.08)),
+            rx: rad * (viewH / Math.max(1, viewW)) * 1.15,
+            ry: rad,
+            startAngle: Math.random() * Math.PI * 2,
+            createdAt: now,
+            delayMs: i * 380,
+            star: null
+          };
+        } else {
+          const leftStart = i % 2 === 0;
+          const x0 = leftStart ? -0.05 + Math.random() * 0.15 : 0.90 + Math.random() * 0.15;
+          const x1 = leftStart ? 0.88 + Math.random() * 0.17 : -0.05 + Math.random() * 0.17;
+          const y0 = 0.08 + Math.random() * 0.42;
+          const y1 = 0.08 + Math.random() * 0.42;
+          const cx = clickXNorm + (Math.random() - 0.5) * 0.24;
+          const cy = Math.max(0.03, clickYNorm - 0.12 + (Math.random() - 0.5) * 0.22);
+          curve = {
+            id: curveId,
+            isCircular: false,
+            x0: x0,
+            y0: y0,
+            cx: cx,
+            cy: cy,
+            x1: x1,
+            y1: y1,
+            createdAt: now,
+            delayMs: i * 380,
+            star: null
+          };
+        }
+
+        const starT = 0.28 + Math.random() * 0.44;
+        curve.star = {
+          id: `star_${curveId}`,
+          curveId: curveId,
+          batchId: batchId,
+          t: starT,
+          speed: (Math.random() < 0.5 ? 1 : -1) * (0.012 + Math.random() * 0.01),
+          state: `ready`, // 'ready' | 'written' | 'departed'
+          departAt: 0,
+          letter: null
+        };
+
+        curves.push(curve);
+
+        // Play Violin Harmony Note for each orbit curve
+        const noteFreq = VIOLIN_SCALE[(i * 2 + Math.floor(Math.random() * 2)) % VIOLIN_SCALE.length];
+        playViolinHarmony(noteFreq, i * 0.42);
+      }
+
+      appState.orbitBatches.push({
+        id: batchId,
+        curves: curves,
+        alpha: 1,
+        fading: false
+      });
+    }
+
+    function drawOrbitsAndStars(ctxRef, now, isReflection) {
+      const waterY = getWaterLevelY();
+      for (let b = appState.orbitBatches.length - 1; b >= 0; b--) {
+        const batch = appState.orbitBatches[b];
+
+        // Check if all stars in batch have departed
+        let anyNotDeparted = false;
+        for (let c = 0; c < batch.curves.length; c++) {
+          if (batch.curves[c].star && batch.curves[c].star.state !== `departed`) {
+            anyNotDeparted = true;
+            break;
+          }
+        }
+        if (!anyNotDeparted && !batch.fading) {
+          batch.fading = true;
+        }
+        if (batch.fading) {
+          batch.alpha -= 0.014;
+          if (batch.alpha <= 0) {
+            appState.orbitBatches.splice(b, 1);
+            continue;
+          }
+        }
+
+        for (let c = 0; c < batch.curves.length; c++) {
+          const curve = batch.curves[c];
+          const drawElapsed = Math.max(0, now - curve.createdAt - curve.delayMs);
+          const drawProgress = Math.min(1, drawElapsed / 3000);
+          if (drawProgress <= 0) continue;
+
+          const baseAlpha = batch.alpha * (isReflection ? 0.32 : 0.65);
+          ctxRef.save();
+          ctxRef.beginPath();
+          const steps = 64;
+          const maxStep = Math.max(2, Math.floor(steps * drawProgress));
+          for (let s = 0; s <= maxStep; s++) {
+            const t = (s / steps);
+            const pt = evalOrbitPoint(curve, t);
+            let drawY = pt.y;
+            let drawX = pt.x;
+            if (isReflection) {
+              drawY = waterY + (waterY - pt.y) * 0.62;
+              drawX += Math.sin(now * 0.003 + drawY * 0.08) * 3.5;
+            }
+            if (s === 0) ctxRef.moveTo(drawX, drawY);
+            else ctxRef.lineTo(drawX, drawY);
+          }
+
+          ctxRef.strokeStyle = `rgba(223, 170, 91, ${baseAlpha * 0.55})`;
+          ctxRef.lineWidth = isReflection ? 1.4 : 1.3;
+          ctxRef.setLineDash(curve.isCircular ? [] : [5, 6]);
+          ctxRef.stroke();
+          ctxRef.setLineDash([]);
+          ctxRef.restore();
+
+          // Orbit star logic (update only during main sky pass)
+          const star = curve.star;
+          if (star && star.state !== `departed`) {
+            if (!isReflection && drawProgress >= 1) {
+              star.t += star.speed * 0.016;
+              if (curve.isCircular) {
+                if (star.t > 1) star.t -= 1;
+                if (star.t < 0) star.t += 1;
+              } else {
+                if (star.t > 0.92 || star.t < 0.08) star.speed *= -1;
+              }
+
+              // Check 10-second departure trigger
+              if (star.state === `written` && now >= star.departAt) {
+                star.state = `departed`;
+                const sPt = evalOrbitPoint(curve, star.t);
+                launchDepartingStar(sPt.x, sPt.y);
+              }
+            }
+
+            if (drawProgress >= 0.45 && star.state !== `departed`) {
+              const sPt = evalOrbitPoint(curve, Math.min(drawProgress, star.t));
+              let sx = sPt.x;
+              let sy = sPt.y;
+              if (isReflection) {
+                sy = waterY + (waterY - sy) * 0.62;
+                sx += Math.sin(now * 0.003 + sy * 0.08) * 3.5;
+              }
+
+              // Countdown ring if written
+              if (!isReflection && star.state === `written`) {
+                const remain = Math.max(0, (star.departAt - now) / 10000);
+                ctxRef.save();
+                ctxRef.beginPath();
+                ctxRef.arc(sx, sy, 14, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * remain);
+                ctxRef.strokeStyle = `rgba(124, 196, 232, 0.85)`;
+                ctxRef.lineWidth = 1.6;
+                ctxRef.stroke();
+                ctxRef.restore();
+              }
+
+              const glowR = isReflection ? 12 : 16;
+              const grad = ctxRef.createRadialGradient(sx, sy, 1, sx, sy, glowR);
+              const coreColor = star.state === `written` ? `rgba(124, 196, 232, ` : `rgba(245, 220, 176, `;
+              grad.addColorStop(0, coreColor + (isReflection ? `0.55)` : `0.95)`));
+              grad.addColorStop(0.4, coreColor + (isReflection ? `0.25)` : `0.45)`));
+              grad.addColorStop(1, coreColor + `0)`);
+              ctxRef.fillStyle = grad;
+              ctxRef.beginPath();
+              ctxRef.arc(sx, sy, glowR, 0, Math.PI * 2);
+              ctxRef.fill();
+
+              // 4-point star sparkle
+              if (!isReflection) {
+                ctxRef.save();
+                ctxRef.translate(sx, sy);
+                ctxRef.fillStyle = `#fffaf0`;
+                ctxRef.beginPath();
+                for (let k = 0; k < 4; k++) {
+                  const a = (k * Math.PI) / 2;
+                  ctxRef.lineTo(Math.cos(a) * 8, Math.sin(a) * 8);
+                  ctxRef.lineTo(Math.cos(a + Math.PI / 4) * 2.5, Math.sin(a + Math.PI / 4) * 2.5);
+                }
+                ctxRef.closePath();
+                ctxRef.fill();
+                ctxRef.restore();
+              }
+            }
+          }
+        }
+      }
+    }
+
+    function launchDepartingStar(startX, startY) {
+      playSparkleChime(660);
+      const goRight = startX < viewW * 0.55;
+      appState.shootingEffects.push({
+        x: startX,
+        y: startY,
+        vx: (goRight ? 1 : -1) * (360 + Math.random() * 140),
+        vy: -(180 + Math.random() * 110),
+        trail: [],
+        alpha: 1
+      });
+    }
+
+    /* =========================================================================
+       9. Falling Star Mechanics (Every 1 min per room, 50% chance)
+       ========================================================================= */
+    function buildTornPreviewSegments(text) {
+      // Visually tag 1-2 short spans as partially obscured by torn paper edge
+      return text;
+    }
+
+    function triggerFallingStarRoll(forceSpawn) {
+      if (!forceSpawn && Math.random() >= 0.5) {
+        return;
+      }
+      if (appState.fallenStars.length >= 6) {
+        appState.fallenStars.shift();
+      }
+
+      const landOnLake = Math.random() < 0.45;
+      const targetXNorm = landOnLake
+        ? 0.60 + Math.random() * 0.28
+        : 0.08 + Math.random() * 0.40;
+
+      // 90% nature encouragement sentence; 10% real user letter from global pool (0% AI letters)
+      const roll = Math.random();
+      let payload;
+      if (roll < 0.10 && appState.globalUserLetters.length > 0) {
+        const picked = appState.globalUserLetters[Math.floor(Math.random() * appState.globalUserLetters.length)];
+        const isTorn = Math.random() < 0.30; // 30% chance for torn cream paper effect
+        payload = {
+          kind: `user`,
+          to: picked.to,
+          content: picked.content,
+          from: picked.from || ``,
+          isTorn: isTorn,
+          planetOrigin: picked.planet || 1
+        };
+      } else {
+        const sent = NATURE_SENTENCES[Math.floor(Math.random() * NATURE_SENTENCES.length)];
+        payload = {
+          kind: `nature`,
+          to: sent.to,
+          content: sent.content,
+          from: `자연의 품에서`,
+          isTorn: false
+        };
+      }
+
+      const startXNorm = Math.max(0.05, Math.min(0.95, targetXNorm + (Math.random() < 0.5 ? -0.18 : 0.18)));
+      appState.fallingTrails.push({
+        xNorm: startXNorm,
+        y: -20,
+        targetXNorm: targetXNorm,
+        landOnLake: landOnLake,
+        progress: 0,
+        payload: payload
+      });
+    }
+
+    // 1-minute per planet room falling star check
+    setInterval(function () {
+      triggerFallingStarRoll(false);
+    }, 60000);
+
+    /* =========================================================================
+       10. Letter Writing, Reading, Archiving & Releasing
+       ========================================================================= */
+    function openWriteModalForStar(star) {
+      appState.activeOrbitStarRef = star;
+      const toEl = document.getElementById(`write-to`);
+      const contentEl = document.getElementById(`write-content`);
+      const fromEl = document.getElementById(`write-from`);
+      const errEl = document.getElementById(`write-error-msg`);
+      if (toEl) toEl.value = ``;
+      if (contentEl) contentEl.value = ``;
+      if (fromEl) fromEl.value = ``;
+      if (errEl) errEl.textContent = ``;
+      const modal = document.getElementById(`modal-write`);
+      if (modal) modal.classList.add(`open`);
+      if (toEl) toEl.focus();
+    }
+
+    function closeWriteModal() {
+      const modal = document.getElementById(`modal-write`);
+      if (modal) modal.classList.remove(`open`);
+      appState.activeOrbitStarRef = null;
+    }
+
+    function submitStarLetter(mode) {
+      const toEl = document.getElementById(`write-to`);
+      const contentEl = document.getElementById(`write-content`);
+      const fromEl = document.getElementById(`write-from`);
+      const errEl = document.getElementById(`write-error-msg`);
+      if (!toEl || !contentEl || !fromEl || !errEl) return;
+
+      const toVal = toEl.value.trim();
+      const contentVal = contentEl.value.trim();
+      const fromVal = fromEl.value.trim();
+
+      if (!toVal) {
+        errEl.textContent = `받는 이(To)를 입력해주세요.`;
+        toEl.focus();
+        return;
+      }
+      if (!contentVal) {
+        errEl.textContent = `편지 내용(Content)을 입력해주세요.`;
+        contentEl.focus();
+        return;
+      }
+
+      const letterObj = {
+        id: `ltr_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+        to: toVal,
+        content: contentVal,
+        from: fromVal,
+        planet: appState.currentPlanet,
+        createdAt: new Date().toISOString()
+      };
+
+      if (mode === `send`) {
+        appState.globalUserLetters.push(letterObj);
+        broadcastEvent({ type: `global_letter`, letter: letterObj });
+        showToast(`편지가 우주로 전송되었습니다. 10초 뒤 별이 긴 꼬리를 남기며 떠납니다.`);
+      } else {
+        appState.archiveLetters.push(Object.assign({ kind: `user`, isTorn: false }, letterObj));
+        updateHudBadges();
+        showToast(`별자리 보관함에 간직했습니다. 10초 뒤 별이 밤하늘로 떠납니다.`);
+      }
+
+      if (appState.activeOrbitStarRef) {
+        appState.activeOrbitStarRef.state = `written`;
+        appState.activeOrbitStarRef.departAt = performance.now() + 10000;
+        appState.activeOrbitStarRef.letter = letterObj;
+      }
+
+      savePersistedState();
+      closeWriteModal();
+    }
+
+    function openReadingModal(item) {
+      appState.activeReadingItem = item;
+      const data = item.payload || item;
+      const paperBox = document.getElementById(`read-paper-box`);
+      const scrapTop = document.getElementById(`tear-scrap-top`);
+      const scrapBot = document.getElementById(`tear-scrap-bottom`);
+      const tagEl = document.getElementById(`read-source-tag`);
+      const toLine = document.getElementById(`read-to-line`);
+      const bodyText = document.getElementById(`read-body-text`);
+      const fromLine = document.getElementById(`read-from-line`);
+      const keepBtn = document.getElementById(`btn-read-keep`);
+
+      if (!paperBox || !tagEl || !toLine || !bodyText || !fromLine) return;
+
+      const isTorn = Boolean(data.isTorn);
+      if (isTorn) {
+        paperBox.classList.add(`torn-cream`);
+        if (scrapTop) scrapTop.style.display = `block`;
+        if (scrapBot) scrapBot.style.display = `block`;
+      } else {
+        paperBox.classList.remove(`torn-cream`);
+        if (scrapTop) scrapTop.style.display = `none`;
+        if (scrapBot) scrapBot.style.display = `none`;
+      }
+
+      tagEl.textContent = item.isArchived
+        ? `별자리 보관함의 별`
+        : (data.kind === `user`
+          ? (isTorn ? `어느 행성에서 날아온 낡은 편지` : `어느 행성에서 건너온 편지`)
+          : (item.isBoat ? `호수 위의 종이배` : `자연이 건네는 문장`));
+
+      toLine.textContent = `To. ${data.to || `당신에게`}`;
+
+      // Render torn partial concealment safely without innerHTML XSS
+      bodyText.textContent = ``;
+      const rawText = data.content || ``;
+      if (isTorn && rawText.length > 12) {
+        const cutStart = Math.floor(rawText.length * 0.38);
+        const cutLen = Math.min(4, Math.max(2, Math.floor(rawText.length * 0.08)));
+        const before = rawText.slice(0, cutStart);
+        const hidden = rawText.slice(cutStart, cutStart + cutLen);
+        const after = rawText.slice(cutStart + cutLen);
+
+        bodyText.appendChild(document.createTextNode(before));
+        const maskSpan = document.createElement(`span`);
+        maskSpan.className = `torn-concealed`;
+        maskSpan.textContent = hidden;
+        maskSpan.setAttribute(`aria-label`, `찢어진 종이 조각으로 가려진 글자`);
+        bodyText.appendChild(maskSpan);
+        bodyText.appendChild(document.createTextNode(after));
+      } else {
+        bodyText.textContent = rawText;
+      }
+
+      fromLine.textContent = data.from ? `From. ${data.from}` : ``;
+
+      if (keepBtn) {
+        if (item.isArchived) keepBtn.textContent = `계속 간직하기`;
+        else if (item.isBoat) keepBtn.textContent = `호수에 띄워두기`;
+        else keepBtn.textContent = `보관하기`;
+      }
+
+      const modal = document.getElementById(`modal-read`);
+      if (modal) modal.classList.add(`open`);
+    }
+
+    function closeReadModal() {
+      const modal = document.getElementById(`modal-read`);
+      if (modal) modal.classList.remove(`open`);
+      appState.activeReadingItem = null;
+    }
+
+    function keepCurrentReading() {
+      const item = appState.activeReadingItem;
+      if (!item) return;
+
+      if (item.isArchived) {
+        closeReadModal();
+        showToast(`별자리 보관함에 소중히 간직되어 있습니다.`);
+        return;
+      }
+
+      if (item.isBoat) {
+        closeReadModal();
+        showToast(`종이배가 호수 위에서 고요히 항해합니다.`);
+        return;
+      }
+
+      const data = item.payload;
+      if (data.kind === `nature`) {
+        // Nature sentences turn into floating paper boats on the lake
+        appState.paperBoats.push({
+          id: `boat_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+          xNorm: 0.59 + Math.random() * 0.28,
+          phase: Math.random() * Math.PI * 2,
+          driftDir: Math.random() < 0.5 ? 1 : -1,
+          payload: data
+        });
+        showToast(`자연의 문장이 호수 위 종이배가 되어 떠올랐습니다.`);
+      } else {
+        // Real user letters become stars in the Constellation Archive
+        appState.archiveLetters.push({
+          id: `arch_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+          kind: `user`,
+          to: data.to,
+          content: data.content,
+          from: data.from,
+          isTorn: Boolean(data.isTorn),
+          createdAt: new Date().toISOString()
+        });
+        showToast(`편지가 별자리 보관함의 새로운 별이 되었습니다.`);
+      }
+
+      // Remove fallen star from ground/lake
+      const idx = appState.fallenStars.indexOf(item);
+      if (idx !== -1) appState.fallenStars.splice(idx, 1);
+
+      updateHudBadges();
+      savePersistedState();
+      closeReadModal();
+    }
+
+    function releaseCurrentReading() {
+      const item = appState.activeReadingItem;
+      if (!item) return;
+
+      playXylophoneChime();
+
+      const px = item.xNorm * viewW;
+      const py = item.isBoat ? getWaterLevelY() + 4 : getWalkableSurfaceY(px) - 8;
+      for (let i = 0; i < 24; i++) {
+        appState.releaseParticles.push({
+          x: px + (Math.random() - 0.5) * 14,
+          y: py + (Math.random() - 0.5) * 10,
+          vx: (Math.random() - 0.5) * 45,
+          vy: -30 - Math.random() * 65,
+          r: 1.5 + Math.random() * 2.5,
+          alpha: 1
+        });
+      }
+
+      if (item.isArchived) {
+        const aIdx = appState.archiveLetters.findIndex(function (l) { return l.id === item.id; });
+        if (aIdx !== -1) appState.archiveLetters.splice(aIdx, 1);
+      } else if (item.isBoat) {
+        const bIdx = appState.paperBoats.indexOf(item);
+        if (bIdx !== -1) appState.paperBoats.splice(bIdx, 1);
+      } else {
+        const sIdx = appState.fallenStars.indexOf(item);
+        if (sIdx !== -1) appState.fallenStars.splice(sIdx, 1);
+      }
+
+      updateHudBadges();
+      savePersistedState();
+      closeReadModal();
+      showToast(`은은한 실로폰 소리와 함께 빛으로 놓아주었습니다.`);
+    }
+
+    /* =========================================================================
+       11. Constellation Archive Modal
+       ========================================================================= */
+    function openArchiveModal() {
+      const modal = document.getElementById(`modal-archive`);
+      if (modal) modal.classList.add(`open`);
+      renderArchiveModal();
+    }
+
+    function closeArchiveModal() {
+      const modal = document.getElementById(`modal-archive`);
+      if (modal) modal.classList.remove(`open`);
+    }
+
+    function renderArchiveModal() {
+      const listWrap = document.getElementById(`archive-list-wrap`);
+      const constCanvas = document.getElementById(`constellation-canvas`);
+      if (!listWrap || !constCanvas) return;
+
+      listWrap.textContent = ``;
+      const letters = appState.archiveLetters;
+
+      if (letters.length === 0) {
+        const empty = document.createElement(`div`);
+        empty.className = `empty-state`;
+        empty.style.gridColumn = `1 / -1`;
+        empty.textContent = `아직 별자리 보관함에 담긴 편지가 없습니다. 밤하늘의 궤도 별이나 땅에 떨어진 편지를 보관해보세요.`;
+        listWrap.appendChild(empty);
+      } else {
+        for (let i = 0; i < letters.length; i++) {
+          const ltr = letters[i];
+          const card = document.createElement(`button`);
+          card.type = `button`;
+          card.className = `archive-item` + (appState.selectedArchiveId === ltr.id ? ` selected` : ``);
+          card.onclick = function () {
+            appState.selectedArchiveId = ltr.id;
+            closeArchiveModal();
+            openReadingModal({ id: ltr.id, payload: ltr, isArchived: true });
+          };
+
+          const title = document.createElement(`div`);
+          title.className = `archive-item-title`;
+          title.textContent = `To. ${ltr.to}`;
+
+          const snip = document.createElement(`div`);
+          snip.className = `archive-item-snippet`;
+          snip.textContent = ltr.content;
+
+          const meta = document.createElement(`div`);
+          meta.className = `mono-meta`;
+          meta.textContent = ltr.from ? `From. ${ltr.from}` : `익명의 별빛`;
+
+          card.appendChild(title);
+          card.appendChild(snip);
+          card.appendChild(meta);
+          listWrap.appendChild(card);
+        }
+      }
+
+      // Render Constellation Canvas
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const cw = constCanvas.offsetWidth || 640;
+      const ch = constCanvas.offsetHeight || 240;
+      constCanvas.width = Math.floor(cw * dpr);
+      constCanvas.height = Math.floor(ch * dpr);
+      const cCtx = constCanvas.getContext(`2d`);
+      if (!cCtx) return;
+      cCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      cCtx.fillStyle = `#0a101d`;
+      cCtx.fillRect(0, 0, cw, ch);
+
+      // Subtle background stars
+      for (let i = 0; i < 45; i++) {
+        const bx = ((i * 97) % 100) / 100 * cw;
+        const by = ((i * 53) % 100) / 100 * ch;
+        cCtx.fillStyle = `rgba(242, 236, 225, 0.25)`;
+        cCtx.beginPath();
+        cCtx.arc(bx, by, 1, 0, Math.PI * 2);
+        cCtx.fill();
+      }
+
+      const nodes = [];
+      for (let i = 0; i < letters.length; i++) {
+        const x = 44 + ((i * 137 + 41) % Math.max(80, cw - 88));
+        const y = 38 + ((i * 79 + 29) % Math.max(60, ch - 76));
+        nodes.push({ x: x, y: y, ltr: letters[i] });
+      }
+
+      // Connect constellation lines
+      if (nodes.length > 1) {
+        cCtx.strokeStyle = `rgba(124, 196, 232, 0.45)`;
+        cCtx.lineWidth = 1.2;
+        cCtx.beginPath();
+        cCtx.moveTo(nodes[0].x, nodes[0].y);
+        for (let i = 1; i < nodes.length; i++) {
+          cCtx.lineTo(nodes[i].x, nodes[i].y);
+        }
+        cCtx.stroke();
+      }
+
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        const grad = cCtx.createRadialGradient(n.x, n.y, 1, n.x, n.y, 12);
+        grad.addColorStop(0, `rgba(223, 170, 91, 0.95)`);
+        grad.addColorStop(1, `rgba(223, 170, 91, 0)`);
+        cCtx.fillStyle = grad;
+        cCtx.beginPath();
+        cCtx.arc(n.x, n.y, 12, 0, Math.PI * 2);
+        cCtx.fill();
+
+        cCtx.fillStyle = `#f2ece1`;
+        cCtx.beginPath();
+        cCtx.arc(n.x, n.y, 3, 0, Math.PI * 2);
+        cCtx.fill();
+      }
+
+      constCanvas.onclick = function (ev) {
+        const rect = constCanvas.getBoundingClientRect();
+        const mx = ev.clientX - rect.left;
+        const my = ev.clientY - rect.top;
+        for (let i = 0; i < nodes.length; i++) {
+          if (Math.hypot(mx - nodes[i].x, my - nodes[i].y) <= 18) {
+            appState.selectedArchiveId = nodes[i].ltr.id;
+            closeArchiveModal();
+            openReadingModal({ id: nodes[i].ltr.id, payload: nodes[i].ltr, isArchived: true });
+            return;
+          }
+        }
+      };
+    }
+
+    /* =========================================================================
+       12. Planet Room Modal, 1:1 Chat & Emotion Star Particles
+       ========================================================================= */
+    function openPlanetModal() {
+      const nameInput = document.getElementById(`player-name-input`);
+      if (nameInput) nameInput.value = appState.playerName;
+      renderPlanetGrid();
+      const modal = document.getElementById(`modal-planet`);
+      if (modal) modal.classList.add(`open`);
+    }
+
+    function closePlanetModal() {
+      const modal = document.getElementById(`modal-planet`);
+      if (modal) modal.classList.remove(`open`);
+    }
+
+    function savePlayerName() {
+      const nameInput = document.getElementById(`player-name-input`);
+      if (!nameInput) return;
+      const val = nameInput.value.trim();
+      if (!val) return;
+      appState.playerName = val;
+      savePersistedState();
+      sendMyPresence();
+      showToast(`여행자 이름이 '${val}'(으)로 변경되었습니다.`);
+    }
+
+    function renderPlanetGrid() {
+      const grid = document.getElementById(`planet-list-grid`);
+      if (!grid) return;
+      grid.textContent = ``;
+
+      const maxPlanet = Math.max(2, appState.currentPlanet);
+      for (let p = 1; p <= maxPlanet; p++) {
+        const peers = getActiveRoomMembers(p);
+        const extraSim = p === 1 ? simulatedOverflowCount : 0;
+        const count = Math.min(ROOM_CAP, peers.length + (appState.currentPlanet === p ? 1 : 0) + extraSim);
+
+        const card = document.createElement(`button`);
+        card.type = `button`;
+        card.className = `planet-card` + (appState.currentPlanet === p ? ` active` : ``);
+        card.onclick = function () {
+          if (p !== appState.currentPlanet && count >= ROOM_CAP) {
+            showToast(`Planet ${p}은(는) 정원(5명)이 가득 찼습니다.`);
+            return;
+          }
+          appState.currentPlanet = p;
+          updateHudBadges();
+          renderPlanetGrid();
+          sendMyPresence();
+          showToast(`Planet ${p} 행성으로 이동했습니다.`);
+        };
+
+        const h = document.createElement(`div`);
+        h.style.fontWeight = `600`;
+        h.textContent = `Planet ${p}`;
+
+        const meta = document.createElement(`div`);
+        meta.className = `mono-meta`;
+        meta.textContent = `${count} / ${ROOM_CAP} 명 접속 중`;
+
+        card.appendChild(h);
+        card.appendChild(meta);
+        grid.appendChild(card);
+      }
+    }
+
+    function simulateExtraTravelerJoin() {
+      simulatedOverflowCount += 1;
+      const peersInP1 = getActiveRoomMembers(1).length + 1 + simulatedOverflowCount;
+      if (appState.currentPlanet === 1 && peersInP1 > ROOM_CAP) {
+        appState.currentPlanet = 2;
+        showToast(`Planet 1 정원(5명) 초과로 Planet 2 행성으로 자동 연결되었습니다.`);
+      } else {
+        showToast(`새 여행자가 Planet 1에 입장했습니다.`);
+      }
+      updateHudBadges();
+      renderPlanetGrid();
+      sendMyPresence();
+    }
+
+    let pendingChatPeer = null;
+
+    function openChatRequestForPeer(peer) {
+      pendingChatPeer = peer;
+      const desc = document.getElementById(`chat-req-desc`);
+      if (desc) {
+        const accLabel = ACCESSORY_NAMES[peer.accessory] || `여행자`;
+        desc.textContent = `${peer.name} (${accLabel})님에게 1:1 속삭임 대화 요청을 보낼까요?`;
+      }
+      const modal = document.getElementById(`modal-chat-request`);
+      if (modal) modal.classList.add(`open`);
+    }
+
+    function closeChatRequestModal() {
+      const modal = document.getElementById(`modal-chat-request`);
+      if (modal) modal.classList.remove(`open`);
+      pendingChatPeer = null;
+    }
+
+    function confirmSendChatRequest() {
+      const target = pendingChatPeer;
+      closeChatRequestModal();
+      if (!target) return;
+      openActiveChatWith(target);
+      showToast(`${target.name}님과 1:1 대화가 연결되었습니다.`);
+    }
+
+    function openActiveChatWith(peer) {
+      appState.chatTargetPeer = peer;
+      const label = document.getElementById(`chat-partner-label`);
+      if (label) label.textContent = `${peer.name}와의 속삭임`;
+      renderChatMessages(peer.id);
+      const box = document.getElementById(`chat-box`);
+      if (box) box.classList.add(`open`);
+    }
+
+    function closeActiveChat() {
+      const box = document.getElementById(`chat-box`);
+      if (box) box.classList.remove(`open`);
+      appState.chatTargetPeer = null;
+    }
+
+    function appendChatMessage(peerId, mine, text) {
+      if (!appState.chatHistory[peerId]) appState.chatHistory[peerId] = [];
+      appState.chatHistory[peerId].push({ mine: mine, text: text });
+      if (appState.chatTargetPeer && appState.chatTargetPeer.id === peerId) {
+        renderChatMessages(peerId);
+      }
+    }
+
+    function renderChatMessages(peerId) {
+      const wrap = document.getElementById(`chat-messages`);
+      if (!wrap) return;
+      wrap.textContent = ``;
+      const msgs = appState.chatHistory[peerId] || [];
+      if (msgs.length === 0) {
+        const hint = document.createElement(`div`);
+        hint.style.color = `var(--on-surface-variant)`;
+        hint.style.fontSize = `0.8125rem`;
+        hint.textContent = `감정 별빛을 보내거나 조용한 안부를 건네보세요.`;
+        wrap.appendChild(hint);
+        return;
+      }
+      for (let i = 0; i < msgs.length; i++) {
+        const b = document.createElement(`div`);
+        b.className = `chat-bubble ` + (msgs[i].mine ? `mine` : `theirs`);
+        b.textContent = msgs[i].text;
+        wrap.appendChild(b);
+      }
+      wrap.scrollTop = wrap.scrollHeight;
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById(`chat-input`);
+      const peer = appState.chatTargetPeer;
+      if (!input || !peer) return;
+      const txt = input.value.trim();
+      if (!txt) return;
+      input.value = ``;
+      appendChatMessage(peer.id, true, txt);
+      if (!peer.isNpc) {
+        broadcastEvent({
+          type: `chat_message`,
+          targetId: peer.id,
+          senderName: appState.playerName,
+          text: txt
+        });
+      }
+    }
+
+    function sendEmotionStar(emotion) {
+      const peer = appState.chatTargetPeer;
+      if (!peer) return;
+      spawnEmotionBurst(appState.player.xNorm, peer.xNorm, emotion);
+      playSparkleChime(emotion === `warmth` ? 659.25 : (emotion === `comfort` ? 587.33 : 880));
+
+      const labels = {
+        warmth: `주황빛 온기의 별을 보냈습니다.`,
+        comfort: `푸른빛 위로의 별을 보냈습니다.`,
+        gratitude: `금빛 감사의 별을 보냈습니다.`
+      };
+      appendChatMessage(peer.id, true, `✦ ${labels[emotion]}`);
+
+      if (!peer.isNpc) {
+        broadcastEvent({
+          type: `emotion_star`,
+          targetId: peer.id,
+          emotion: emotion
+        });
+      }
+    }
+
+    function spawnEmotionBurst(fromXNorm, toXNorm, emotion) {
+      const colorMap = {
+        warmth: `#ff9a52`,
+        comfort: `#6ec3f4`,
+        gratitude: `#ffd166`
+      };
+      const color = colorMap[emotion] || `#ffd166`;
+      const sx = fromXNorm * viewW;
+      const sy = getWalkableSurfaceY(sx) - 36;
+      const tx = toXNorm * viewW;
+      const ty = getWalkableSurfaceY(tx) - 36;
+
+      for (let i = 0; i < 20; i++) {
+        appState.emotionParticles.push({
+          x: sx + (Math.random() - 0.5) * 16,
+          y: sy + (Math.random() - 0.5) * 16,
+          tx: tx + (Math.random() - 0.5) * 28,
+          ty: ty + (Math.random() - 0.5) * 28,
+          t: 0,
+          speed: 0.7 + Math.random() * 0.6,
+          r: 2.2 + Math.random() * 2.8,
+          color: color
+        });
+      }
+    }
+
+    /* =========================================================================
+       13. Audio UI & Admin Mode Easter Egg (10 clicks on volume icon)
+       ========================================================================= */
+    function handleVolumeIconClick() {
+      ensureAudioContext();
+      const now = performance.now();
+      if (now - appState.lastVolumeClickTime > 4000) {
+        appState.volumeClickCount = 0;
+      }
+      appState.lastVolumeClickTime = now;
+      appState.volumeClickCount += 1;
+
+      if (!appState.isAdmin && appState.volumeClickCount >= 10) {
+        appState.isAdmin = true;
+        const adminBtn = document.getElementById(`btn-admin-panel`);
+        if (adminBtn) adminBtn.style.display = `inline-flex`;
+        playSparkleChime(987.77);
+        showToast(`Admin Mode가 해금되었습니다! 붉은 망토와 전역 데이터베이스가 열렸습니다.`);
+      }
+
+      const pop = document.getElementById(`audio-popover`);
+      if (pop) pop.classList.toggle(`open`);
+    }
+
+    function toggleAudioMute() {
+      ensureAudioContext();
+      appState.audioMuted = !appState.audioMuted;
+      applyAudioVolumes();
+      syncAudioUiFromState();
+    }
+
+    function selectBgmTrack(track) {
+      ensureAudioContext();
+      appState.bgmTrack = track;
+      syncAudioUiFromState();
+      savePersistedState();
+    }
+
+    function updateVolumeSlider(channel, rawVal) {
+      ensureAudioContext();
+      const ratio = Math.max(0, Math.min(1, Number(rawVal) / 100));
+      if (channel === `bgm`) appState.volBgm = ratio;
+      if (channel === `sfx`) appState.volSfx = ratio;
+      if (channel === `water`) appState.volWater = ratio;
+      applyAudioVolumes();
+      syncAudioUiFromState();
+      savePersistedState();
+    }
+
+    function syncAudioUiFromState() {
+      const tracks = [`piano`, `musicbox`, `guitar`];
+      for (let i = 0; i < tracks.length; i++) {
+        const el = document.getElementById(`bgm-opt-${tracks[i]}`);
+        if (el) {
+          if (appState.bgmTrack === tracks[i]) el.classList.add(`selected`);
+          else el.classList.remove(`selected`);
+        }
+      }
+      const toggleLabel = document.getElementById(`bgm-toggle-label`);
+      if (toggleLabel) toggleLabel.textContent = appState.audioMuted ? `음소거됨` : `켜짐`;
+
+      const sBgm = document.getElementById(`slider-bgm`);
+      const sSfx = document.getElementById(`slider-sfx`);
+      const sWater = document.getElementById(`slider-water`);
+      const vBgm = document.getElementById(`val-bgm`);
+      const vSfx = document.getElementById(`val-sfx`);
+      const vWater = document.getElementById(`val-water`);
+
+      if (sBgm) sBgm.value = Math.round(appState.volBgm * 100);
+      if (sSfx) sSfx.value = Math.round(appState.volSfx * 100);
+      if (sWater) sWater.value = Math.round(appState.volWater * 100);
+      if (vBgm) vBgm.textContent = `${Math.round(appState.volBgm * 100)}%`;
+      if (vSfx) vSfx.textContent = `${Math.round(appState.volSfx * 100)}%`;
+      if (vWater) vWater.textContent = `${Math.round(appState.volWater * 100)}%`;
+    }
+
+    function openAdminModal() {
+      if (!appState.isAdmin) return;
+      renderAdminDatabase();
+      const modal = document.getElementById(`modal-admin`);
+      if (modal) modal.classList.add(`open`);
+    }
+
+    function closeAdminModal() {
+      const modal = document.getElementById(`modal-admin`);
+      if (modal) modal.classList.remove(`open`);
+    }
+
+    function renderAdminDatabase() {
+      const summary = document.getElementById(`admin-db-summary`);
+      const list = document.getElementById(`admin-letter-list`);
+      if (!summary || !list) return;
+
+      const letters = appState.globalUserLetters;
+      summary.textContent = `전역 편지 ${letters.length}건 · 붉은 망토 착용 중`;
+      list.textContent = ``;
+
+      if (letters.length === 0) {
+        const empty = document.createElement(`div`);
+        empty.className = `empty-state`;
+        empty.textContent = `아직 전역 데이터베이스에 전송된 사용자 편지가 없습니다. 궤도 별에서 '보내기'로 첫 편지를 띄워보세요.`;
+        list.appendChild(empty);
+        return;
+      }
+
+      for (let i = letters.length - 1; i >= 0; i--) {
+        const l = letters[i];
+        const row = document.createElement(`div`);
+        row.className = `admin-letter-row`;
+
+        const head = document.createElement(`div`);
+        head.style.display = `flex`;
+        head.style.justifyContent = `space-between`;
+        head.style.gap = `var(--space-sm)`;
+
+        const toSpan = document.createElement(`strong`);
+        toSpan.textContent = `To. ${l.to}`;
+
+        const metaSpan = document.createElement(`span`);
+        metaSpan.className = `mono-meta`;
+        metaSpan.textContent = `Planet ${l.planet || 1} · ${l.from || `익명`}`;
+
+        const body = document.createElement(`div`);
+        body.style.fontSize = `0.9375rem`;
+        body.textContent = l.content;
+
+        head.appendChild(toSpan);
+        head.appendChild(metaSpan);
+        row.appendChild(head);
+        row.appendChild(body);
+        list.appendChild(row);
+      }
+    }
+
+    function adminSpawnFallingStar() {
+      if (!appState.isAdmin) return;
+      triggerFallingStarRoll(true);
+      closeAdminModal();
+      showToast(`관리자 권한으로 별똥별을 호출했습니다.`);
+    }
+
+    /* =========================================================================
+       14. HUD Helpers, Toast & Mobile Virtual Joystick
+       ========================================================================= */
+    let toastTimer = null;
+    function showToast(message) {
+      const pill = document.getElementById(`toast-pill`);
+      if (!pill) return;
+      pill.textContent = message;
+      pill.classList.add(`show`);
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () {
+        pill.classList.remove(`show`);
+      }, 3600);
+    }
+
+    function updateHudBadges() {
+      const pLabel = document.getElementById(`hud-planet-label`);
+      const pCount = document.getElementById(`hud-player-count`);
+      const aCount = document.getElementById(`hud-archive-count`);
+      const activeCount = Math.min(ROOM_CAP, getActiveRoomMembers(appState.currentPlanet).length + 1 + (appState.currentPlanet === 1 ? simulatedOverflowCount : 0));
+
+      if (pLabel) pLabel.textContent = `Planet ${appState.currentPlanet}`;
+      if (pCount) pCount.textContent = `${activeCount}/${ROOM_CAP}`;
+      if (aCount) aCount.textContent = String(appState.archiveLetters.length);
+    }
+
+    function toggleJoystickVisibility() {
+      appState.joystickVisible = !appState.joystickVisible;
+      const cluster = document.getElementById(`joystick-cluster`);
+      const btn = document.getElementById(`btn-joystick-toggle`);
+      if (cluster) {
+        if (appState.joystickVisible) cluster.classList.add(`visible`);
+        else cluster.classList.remove(`visible`);
+      }
+      if (btn) {
+        if (appState.joystickVisible) btn.classList.add(`is-active`);
+        else btn.classList.remove(`is-active`);
+      }
+    }
+
+    function initJoystick() {
+      const isTouch = (`ontouchstart` in window) || navigator.maxTouchPoints > 0 || window.innerWidth <= 1024;
+      if (isTouch) {
+        appState.joystickVisible = true;
+        const cluster = document.getElementById(`joystick-cluster`);
+        const btn = document.getElementById(`btn-joystick-toggle`);
+        if (cluster) cluster.classList.add(`visible`);
+        if (btn) btn.classList.add(`is-active`);
+      }
+
+      const base = document.getElementById(`joystick-base`);
+      const knob = document.getElementById(`joystick-knob`);
+      if (!base || !knob) return;
+
+      let activeTouchId = null;
+
+      function updateKnob(clientX, clientY) {
+        const rect = base.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const maxR = rect.width * 0.34;
+        let dx = clientX - cx;
+        let dy = clientY - cy;
+        const dist = Math.hypot(dx, dy);
+        if (dist > maxR) {
+          dx = (dx / dist) * maxR;
+          dy = (dy / dist) * maxR;
+        }
+        knob.style.transform = `translate(${dx}px, ${dy}px)`;
+        appState.joystickAxisX = Math.abs(dx) > 4 ? (dx / maxR) : 0;
+        if (dy < -maxR * 0.72) {
+          triggerPlayerJump();
+        }
+      }
+
+      function resetKnob() {
+        activeTouchId = null;
+        appState.joystickAxisX = 0;
+        knob.style.transform = `translate(0px, 0px)`;
+      }
+
+      base.addEventListener(`pointerdown`, function (e) {
+        ensureAudioContext();
+        activeTouchId = e.pointerId;
+        base.setPointerCapture(e.pointerId);
+        updateKnob(e.clientX, e.clientY);
+      });
+
+      base.addEventListener(`pointermove`, function (e) {
+        if (activeTouchId !== e.pointerId) return;
+        updateKnob(e.clientX, e.clientY);
+      });
+
+      base.addEventListener(`pointerup`, function (e) {
+        if (activeTouchId === e.pointerId) resetKnob();
+      });
+
+      base.addEventListener(`pointercancel`, function () {
+        resetKnob();
+      });
+    }
+
+    /* =========================================================================
+       15. Canvas Interaction & Keyboard Controls
+       ========================================================================= */
+    const keysDown = {};
+
+    window.addEventListener(`keydown`, function (e) {
+      if (e.target && (e.target.tagName === `INPUT` || e.target.tagName === `TEXTAREA`)) return;
+      keysDown[e.code] = true;
+      if (e.code === `Space`) {
+        e.preventDefault();
+        ensureAudioContext();
+        triggerPlayerJump();
+      }
+    });
+
+    window.addEventListener(`keyup`, function (e) {
+      keysDown[e.code] = false;
+    });
+
+    function triggerPlayerJump() {
+      if (!appState.player.isJumping) {
+        appState.player.isJumping = true;
+        appState.player.vy = -410;
+        if (appState.player.inLake) {
+          appState.ripples.push({ x: appState.player.xNorm * viewW, y: getWaterLevelY() + 6, r: 6, maxR: 48, alpha: 0.75 });
+          playWaterFootstep(1.2);
+        }
+      }
+    }
+
+    function handleCanvasClick(clientX, clientY) {
+      ensureAudioContext();
+
+      // Close audio popover if open
+      const pop = document.getElementById(`audio-popover`);
+      if (pop && pop.classList.contains(`open`)) {
+        pop.classList.remove(`open`);
+      }
+
+      // 1. Hit-test Orbit Stars in sky
+      const hitNow = performance.now();
+      for (let b = 0; b < appState.orbitBatches.length; b++) {
+        const batch = appState.orbitBatches[b];
+        for (let c = 0; c < batch.curves.length; c++) {
+          const curve = batch.curves[c];
+          const star = curve.star;
+          if (!star || star.state !== `ready`) continue;
+          const drawProgress = Math.min(1, Math.max(0, hitNow - curve.createdAt - curve.delayMs) / 3000);
+          if (drawProgress < 0.45) continue;
+          const pt = evalOrbitPoint(curve, Math.min(drawProgress, star.t));
+          if (Math.hypot(clientX - pt.x, clientY - pt.y) <= 24) {
+            openWriteModalForStar(star);
+            return;
+          }
+        }
+      }
+
+      // 2. Hit-test Other Players (1:1 Chat Request)
+      const peers = getActiveRoomMembers(appState.currentPlanet);
+      for (let i = 0; i < peers.length; i++) {
+        const peer = peers[i];
+        const px = peer.xNorm * viewW;
+        const py = getWalkableSurfaceY(px) - 24;
+        if (Math.hypot(clientX - px, clientY - py) <= 28) {
+          openChatRequestForPeer(peer);
+          return;
+        }
+      }
+
+      // 3. Hit-test Fallen Stars (player walks over first!)
+      for (let i = 0; i < appState.fallenStars.length; i++) {
+        const fs = appState.fallenStars[i];
+        const fx = fs.xNorm * viewW;
+        const fy = fs.landOnLake ? getWaterLevelY() + 2 : getHillSurfaceY(fx) - 6;
+        if (Math.hypot(clientX - fx, clientY - fy) <= 28) {
+          appState.pendingInspect = fs;
+          appState.player.targetXNorm = fs.xNorm;
+          return;
+        }
+      }
+
+      // 4. Hit-test Paper Boats on Lake (player walks over first!)
+      for (let i = 0; i < appState.paperBoats.length; i++) {
+        const boat = appState.paperBoats[i];
+        const bx = boat.xNorm * viewW;
+        const by = getWaterLevelY() + 5;
+        if (Math.hypot(clientX - bx, clientY - by) <= 30) {
+          appState.pendingInspect = Object.assign({ isBoat: true }, boat);
+          appState.pendingInspectRef = boat;
+          appState.player.targetXNorm = boat.xNorm;
+          return;
+        }
+      }
+
+      // 5. Check if clicked empty sky vs terrain/lake
+      const groundAtX = getHillSurfaceY(clientX);
+      const waterY = getWaterLevelY();
+      const boundaryY = Math.min(groundAtX, waterY) - 24;
+
+      if (clientY < boundaryY) {
+        spawnOrbitsAtSky(clientX, clientY);
+      } else {
+        appState.pendingInspect = null;
+        appState.player.targetXNorm = Math.max(0.04, Math.min(0.95, clientX / Math.max(1, viewW)));
+      }
+    }
+
+    if (canvas) {
+      canvas.addEventListener(`click`, function (e) {
+        handleCanvasClick(e.clientX, e.clientY);
+      });
+    }
+
+    /* =========================================================================
+       16. Character, Accessories, Boats & World Rendering
+       ========================================================================= */
+    function drawCloakedTraveler(cCtx, x, y, options) {
+      const isMine = options.isMine;
+      const isAdmin = options.isAdmin;
+      const accessory = options.accessory || `none`;
+      const wetRatio = options.wetRatio || 0;
+      const facing = options.facing || 1;
+      const walkPhase = options.walkPhase || 0;
+      const label = options.name || ``;
+      const bob = Math.abs(Math.sin(walkPhase)) * 2.2;
+
+      cCtx.save();
+      cCtx.translate(x, y - bob);
+
+      // Soft ground shadow
+      cCtx.fillStyle = `rgba(4, 8, 16, 0.38)`;
+      cCtx.beginPath();
+      cCtx.ellipse(0, bob + 2, 13, 4, 0, 0, Math.PI * 2);
+      cCtx.fill();
+
+      // Cloak body path
+      const cloakPath = new Path2D();
+      cloakPath.moveTo(0, -44);
+      cloakPath.bezierCurveTo(10, -44, 13, -32, 15, -10);
+      cloakPath.quadraticCurveTo(16, 0, 12, 2);
+      cloakPath.lineTo(-12, 2);
+      cloakPath.quadraticCurveTo(-16, 0, -15, -10);
+      cloakPath.bezierCurveTo(-13, -32, -10, -44, 0, -44);
+      cloakPath.closePath();
+
+      // White outline glow ONLY for my character
+      if (isMine) {
+        cCtx.save();
+        cCtx.shadowColor = `rgba(255, 255, 255, 0.92)`;
+        cCtx.shadowBlur = 11;
+        cCtx.strokeStyle = `rgba(255, 255, 255, 0.95)`;
+        cCtx.lineWidth = 2.4;
+        cCtx.stroke(cloakPath);
+        cCtx.restore();
+      }
+
+      // Cloak Fill (Admin wears Red Cloak; normal player dark midnight cloak; others pure black silhouette)
+      if (isMine && isAdmin) {
+        const redGrad = cCtx.createLinearGradient(0, -44, 0, 2);
+        redGrad.addColorStop(0, `#d93b52`);
+        redGrad.addColorStop(1, `#8c1c2e`);
+        cCtx.fillStyle = redGrad;
+      } else if (isMine) {
+        const myGrad = cCtx.createLinearGradient(0, -44, 0, 2);
+        myGrad.addColorStop(0, `#1b2945`);
+        myGrad.addColorStop(1, `#0d1526`);
+        cCtx.fillStyle = myGrad;
+      } else {
+        cCtx.fillStyle = `#070a12`;
+      }
+      cCtx.fill(cloakPath);
+
+      // Wet hem overlay (after standing in lake up to 10s)
+      if (wetRatio > 0.02) {
+        cCtx.save();
+        cCtx.clip(cloakPath);
+        const wetH = 16 * wetRatio;
+        const wGrad = cCtx.createLinearGradient(0, 2 - wetH, 0, 3);
+        wGrad.addColorStop(0, `rgba(18, 48, 86, 0)`);
+        wGrad.addColorStop(0.5, `rgba(24, 68, 114, ${0.55 * wetRatio})`);
+        wGrad.addColorStop(1, `rgba(92, 165, 215, ${0.42 * wetRatio})`);
+        cCtx.fillStyle = wGrad;
+        cCtx.fillRect(-18, 2 - wetH, 36, wetH + 2);
+        cCtx.restore();
+      }
+
+      // Subtle glowing eyes
+      cCtx.fillStyle = isMine ? `#f2ece1` : `rgba(223, 170, 91, 0.65)`;
+      cCtx.beginPath();
+      cCtx.arc(facing * 3.5 - 2.2, -31, 1.3, 0, Math.PI * 2);
+      cCtx.arc(facing * 3.5 + 2.2, -31, 1.3, 0, Math.PI * 2);
+      cCtx.fill();
+
+      // Accessories for other real players
+      if (!isMine) {
+        if (accessory === `blue_scarf`) {
+          cCtx.fillStyle = `#4da6ff`;
+          cCtx.beginPath();
+          cCtx.roundRect(-10, -25, 20, 5, 2);
+          cCtx.fill();
+          cCtx.beginPath();
+          cCtx.moveTo(-facing * 5, -22);
+          cCtx.lineTo(-facing * 14, -10);
+          cCtx.lineTo(-facing * 9, -8);
+          cCtx.lineTo(-facing * 2, -20);
+          cCtx.fill();
+        } else if (accessory === `green_hat`) {
+          cCtx.fillStyle = `#48b878`;
+          cCtx.beginPath();
+          cCtx.ellipse(0, -41, 14, 3.5, 0, 0, Math.PI * 2);
+          cCtx.fill();
+          cCtx.beginPath();
+          cCtx.moveTo(-8, -41);
+          cCtx.lineTo(0, -56);
+          cCtx.lineTo(8, -41);
+          cCtx.closePath();
+          cCtx.fill();
+        } else if (accessory === `pink_ribbon`) {
+          cCtx.fillStyle = `#f48fb1`;
+          cCtx.beginPath();
+          cCtx.moveTo(0, -24);
+          cCtx.lineTo(-8, -29);
+          cCtx.lineTo(-8, -19);
+          cCtx.closePath();
+          cCtx.moveTo(0, -24);
+          cCtx.lineTo(8, -29);
+          cCtx.lineTo(8, -19);
+          cCtx.closePath();
+          cCtx.fill();
+          cCtx.beginPath();
+          cCtx.arc(0, -24, 2.5, 0, Math.PI * 2);
+          cCtx.fill();
+        } else if (accessory === `yellow_tie`) {
+          cCtx.fillStyle = `#f7d046`;
+          cCtx.beginPath();
+          cCtx.moveTo(0, -24);
+          cCtx.lineTo(3, -15);
+          cCtx.lineTo(0, -10);
+          cCtx.lineTo(-3, -15);
+          cCtx.closePath();
+          cCtx.fill();
+        } else if (accessory === `blue_glasses`) {
+          cCtx.strokeStyle = `#66c8ff`;
+          cCtx.lineWidth = 1.6;
+          cCtx.beginPath();
+          cCtx.arc(facing * 3.5 - 2.6, -31, 3, 0, Math.PI * 2);
+          cCtx.stroke();
+          cCtx.beginPath();
+          cCtx.arc(facing * 3.5 + 2.6, -31, 3, 0, Math.PI * 2);
+          cCtx.stroke();
+        }
+      }
+
+      // Name tag above my character (and subtle hover/tag for others)
+      if (label) {
+        cCtx.font = `500 12px "Noto Sans KR", sans-serif`;
+        const tw = cCtx.measureText(label).width;
+        const padX = 8;
+        const tagY = accessory === `green_hat` ? -68 : -58;
+        cCtx.fillStyle = isMine ? `rgba(14, 22, 38, 0.78)` : `rgba(10, 16, 29, 0.62)`;
+        cCtx.strokeStyle = isMine ? `rgba(242, 236, 225, 0.55)` : `rgba(155, 168, 191, 0.25)`;
+        cCtx.lineWidth = 1;
+        cCtx.beginPath();
+        cCtx.roundRect(-tw / 2 - padX, tagY - 11, tw + padX * 2, 20, 10);
+        cCtx.fill();
+        cCtx.stroke();
+
+        cCtx.fillStyle = isMine ? `#f2ece1` : `#9ba8bf`;
+        cCtx.textAlign = `center`;
+        cCtx.textBaseline = `middle`;
+        cCtx.fillText(label, 0, tagY - 1);
+      }
+
+      cCtx.restore();
+    }
+
+    function drawPaperBoat(cCtx, x, y, phase, isReflection) {
+      cCtx.save();
+      cCtx.translate(x, y + (isReflection ? 4 : Math.sin(phase) * 2.2));
+      if (isReflection) {
+        cCtx.scale(1, -0.65);
+        cCtx.globalAlpha = 0.28;
+      }
+
+      cCtx.fillStyle = `#f4ead5`;
+      cCtx.strokeStyle = `#d5c39f`;
+      cCtx.lineWidth = 1;
+      // Hull
+      cCtx.beginPath();
+      cCtx.moveTo(-16, 0);
+      cCtx.lineTo(16, 0);
+      cCtx.lineTo(10, 7);
+      cCtx.lineTo(-10, 7);
+      cCtx.closePath();
+      cCtx.fill();
+      cCtx.stroke();
+
+      // Sail
+      cCtx.fillStyle = `#fffaf0`;
+      cCtx.beginPath();
+      cCtx.moveTo(-7, 0);
+      cCtx.lineTo(0, -14);
+      cCtx.lineTo(7, 0);
+      cCtx.closePath();
+      cCtx.fill();
+      cCtx.stroke();
+
+      cCtx.restore();
+    }
+
+    /* =========================================================================
+       17. Main Animation Loop
+       ========================================================================= */
+    let lastFrameTime = performance.now();
+    let nextMeteorAt = performance.now() + 4500;
+    let lastFootstepRippleAt = 0;
+
+    function updateSimulation(dt, now) {
+      // 1. Player horizontal movement (keyboard, joystick, or click-to-walk)
+      const moveSpeedNorm = 0.145; // fraction of screen width per second
+      let manualAxis = 0;
+      if (keysDown[`ArrowLeft`] || keysDown[`KeyA`]) manualAxis -= 1;
+      if (keysDown[`ArrowRight`] || keysDown[`KeyD`]) manualAxis += 1;
+      if (Math.abs(appState.joystickAxisX) > 0.05) manualAxis = appState.joystickAxisX;
+
+      const p = appState.player;
+      let isMoving = false;
+      if (Math.abs(manualAxis) > 0.01) {
+        appState.pendingInspect = null;
+        p.xNorm = Math.max(0.03, Math.min(0.96, p.xNorm + manualAxis * moveSpeedNorm * dt));
+        p.targetXNorm = p.xNorm;
+        p.facing = manualAxis >= 0 ? 1 : -1;
+        isMoving = true;
+      } else {
+        const diff = p.targetXNorm - p.xNorm;
+        if (Math.abs(diff) > 0.003) {
+          const step = Math.sign(diff) * Math.min(Math.abs(diff), moveSpeedNorm * dt);
+          p.xNorm += step;
+          p.facing = diff >= 0 ? 1 : -1;
+          isMoving = true;
+        } else if (appState.pendingInspect) {
+          const targetItem = appState.pendingInspectRef || appState.pendingInspect;
+          const isBoat = Boolean(appState.pendingInspect.isBoat);
+          appState.pendingInspect = null;
+          appState.pendingInspectRef = null;
+          openReadingModal(isBoat ? Object.assign({ isBoat: true }, targetItem) : targetItem);
+        }
+      }
+
+      if (isMoving) {
+        p.walkPhase += dt * 11;
+      }
+
+      // 2. Player jump physics
+      if (p.isJumping) {
+        p.yOffset += p.vy * dt;
+        p.vy += 1180 * dt;
+        if (p.yOffset >= 0) {
+          p.yOffset = 0;
+          p.vy = 0;
+          p.isJumping = false;
+          if (p.inLake) {
+            appState.ripples.push({ x: p.xNorm * viewW, y: getWaterLevelY() + 7, r: 5, maxR: 42, alpha: 0.7 });
+            playWaterFootstep(1.0);
+          }
+        }
+      }
+
+      // 3. Lake detection, wetness (10s wet / 5s dry) & water footsteps
+      const px = p.xNorm * viewW;
+      const shoreX = getShoreNorm() * viewW;
+      p.inLake = px > shoreX + 8 && p.xNorm < 0.94;
+
+      if (p.inLake && !p.isJumping) {
+        p.wetSeconds = Math.min(10, p.wetSeconds + dt);
+        if (isMoving && now - lastFootstepRippleAt > 280) {
+          lastFootstepRippleAt = now;
+          appState.ripples.push({ x: px, y: getWalkableSurfaceY(px) + 2, r: 4, maxR: 34, alpha: 0.65 });
+          playWaterFootstep(0.85);
+        }
+      } else if (!p.inLake) {
+        p.wetSeconds = Math.max(0, p.wetSeconds - dt * 2.0); // dries in 5s
+      }
+      p.wetRatio = p.wetSeconds / 10;
+
+      // Occasional water droplet when wet on dry land
+      if (p.wetRatio > 0.25 && Math.random() < dt * 2.4) {
+        appState.waterDroplets.push({
+          x: px + (Math.random() - 0.5) * 16,
+          y: getWalkableSurfaceY(px) + p.yOffset - 4,
+          vy: 30 + Math.random() * 30,
+          alpha: 0.85
+        });
+      }
+
+      // 4. Gentle NPC traveler strolling
+      for (let i = 0; i < npcTravelers.length; i++) {
+        const npc = npcTravelers[i];
+        if (npc.planet !== appState.currentPlanet) continue;
+        if (now >= npc.nextMoveAt) {
+          npc.targetXNorm = 0.08 + Math.random() * 0.74;
+          npc.nextMoveAt = now + 5000 + Math.random() * 7000;
+        }
+        const d = npc.targetXNorm - npc.xNorm;
+        if (Math.abs(d) > 0.004) {
+          npc.xNorm += Math.sign(d) * Math.min(Math.abs(d), 0.055 * dt);
+          npc.facing = d >= 0 ? 1 : -1;
+          npc.walkPhase += dt * 7;
+        }
+        npc.wetRatio = npc.xNorm > getShoreNorm() ? 0.5 : 0;
+      }
+
+      // 5. Background meteors
+      if (now >= nextMeteorAt) {
+        nextMeteorAt = now + 5500 + Math.random() * 6500;
+        appState.meteors.push({
+          x: (0.1 + Math.random() * 0.8) * viewW,
+          y: (0.04 + Math.random() * 0.24) * viewH,
+          vx: (Math.random() < 0.5 ? 1 : -1) * (240 + Math.random() * 140),
+          vy: 110 + Math.random() * 80,
+          alpha: 1
+        });
+      }
+
+      // 6. Incoming falling star trajectories
+      for (let i = appState.fallingTrails.length - 1; i >= 0; i--) {
+        const tr = appState.fallingTrails[i];
+        tr.progress += dt * 0.65;
+        if (tr.progress >= 1) {
+          appState.fallenStars.push({
+            id: `fstar_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+            xNorm: tr.targetXNorm,
+            landOnLake: tr.landOnLake,
+            payload: tr.payload,
+            phase: Math.random() * Math.PI * 2
+          });
+          if (tr.landOnLake) {
+            appState.ripples.push({
+              x: tr.targetXNorm * viewW,
+              y: getWaterLevelY() + 4,
+              r: 6,
+              maxR: 60,
+              alpha: 0.9
+            });
+            playWaterFootstep(1.1);
+          } else {
+            playSparkleChime(740);
+          }
+          appState.fallingTrails.splice(i, 1);
+        }
+      }
+
+      // 7. Paper boats gentle bobbing
+      for (let i = 0; i < appState.paperBoats.length; i++) {
+        const b = appState.paperBoats[i];
+        b.phase += dt * 2.1;
+        b.xNorm += b.driftDir * 0.0025 * dt;
+        if (b.xNorm < 0.58 || b.xNorm > 0.90) b.driftDir *= -1;
+      }
+
+      // 8. Fireflies drift
+      for (let i = 0; i < fireflies.length; i++) {
+        const f = fireflies[i];
+        f.xNorm += f.vx * (dt * 60);
+        f.yOffset += f.vy * (dt * 60);
+        if (f.xNorm < 0.03 || f.xNorm > 0.53) f.vx *= -1;
+        if (f.yOffset < 6 || f.yOffset > 82) f.vy *= -1;
+      }
+    }
+
+    function renderFrame(now) {
+      const dt = Math.min(0.05, (now - lastFrameTime) / 1000);
+      lastFrameTime = now;
+      updateSimulation(dt, now);
+
+      if (!ctx) {
+        requestAnimationFrame(renderFrame);
+        return;
+      }
+
+      const sky = getCurrentSkyColors(now);
+      const waterY = getWaterLevelY();
+      const shoreX = getShoreNorm() * viewW;
+
+      // 1. Sky Gradient
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, waterY + 20);
+      skyGrad.addColorStop(0, sky.top);
+      skyGrad.addColorStop(0.55, sky.mid);
+      skyGrad.addColorStop(1, sky.horizon);
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, viewW, viewH);
+
+      // 2. Shimmering Stars in Sky
+      for (let i = 0; i < bgStars.length; i++) {
+        const st = bgStars[i];
+        const twinkle = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(now * 0.0018 * st.speed + st.phase));
+        ctx.globalAlpha = twinkle;
+        ctx.fillStyle = st.tint;
+        ctx.beginPath();
+        ctx.arc(st.xNorm * viewW, st.yNorm * viewH, st.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      // 3. Ambient Background Meteors
+      for (let i = appState.meteors.length - 1; i >= 0; i--) {
+        const m = appState.meteors[i];
+        m.x += m.vx * dt;
+        m.y += m.vy * dt;
+        m.alpha -= dt * 0.9;
+        if (m.alpha <= 0) {
+          appState.meteors.splice(i, 1);
+          continue;
+        }
+        ctx.save();
+        ctx.strokeStyle = `rgba(242, 236, 225, ${m.alpha * 0.85})`;
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(m.x, m.y);
+        ctx.lineTo(m.x - m.vx * 0.14, m.y - m.vy * 0.14);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 4. Active Orbits & Orbit Stars in Sky
+      drawOrbitsAndStars(ctx, now, false);
+
+      // 5. Departing Written Stars with Long Glowing Tail
+      for (let i = appState.shootingEffects.length - 1; i >= 0; i--) {
+        const sh = appState.shootingEffects[i];
+        sh.x += sh.vx * dt;
+        sh.y += sh.vy * dt;
+        sh.trail.push({ x: sh.x, y: sh.y });
+        if (sh.trail.length > 36) sh.trail.shift();
+        sh.alpha -= dt * 0.48;
+
+        if (sh.alpha <= 0) {
+          appState.shootingEffects.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        for (let t = 1; t < sh.trail.length; t++) {
+          const ratio = t / sh.trail.length;
+          ctx.strokeStyle = `rgba(245, 220, 176, ${ratio * sh.alpha})`;
+          ctx.lineWidth = ratio * 4.2;
+          ctx.beginPath();
+          ctx.moveTo(sh.trail[t - 1].x, sh.trail[t - 1].y);
+          ctx.lineTo(sh.trail[t].x, sh.trail[t].y);
+          ctx.stroke();
+        }
+        ctx.fillStyle = `rgba(255, 250, 240, ${sh.alpha})`;
+        ctx.beginPath();
+        ctx.arc(sh.x, sh.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // 6. Incoming Falling Star Trails
+      for (let i = 0; i < appState.fallingTrails.length; i++) {
+        const tr = appState.fallingTrails[i];
+        const tx = tr.targetXNorm * viewW;
+        const ty = tr.landOnLake ? waterY + 2 : getHillSurfaceY(tx) - 6;
+        const sx = tr.xNorm * viewW;
+        const cx = sx + (tx - sx) * tr.progress;
+        const cy = -20 + (ty + 20) * tr.progress;
+
+        ctx.save();
+        const grad = ctx.createLinearGradient(cx, cy, cx - (tx - sx) * 0.16, cy - (ty + 20) * 0.16);
+        grad.addColorStop(0, `rgba(255, 248, 224, 0.98)`);
+        grad.addColorStop(1, `rgba(223, 170, 91, 0)`);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 3.2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx - (tx - sx) * 0.16, cy - (ty + 20) * 0.16);
+        ctx.stroke();
+
+        ctx.fillStyle = `#fffaf0`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // 7. Curved Reflective Lake on the Right
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(shoreX - 30, waterY);
+      ctx.bezierCurveTo(shoreX + viewW * 0.08, waterY - 8, viewW * 0.84, waterY - 6, viewW, waterY + 6);
+      ctx.lineTo(viewW, viewH);
+      ctx.lineTo(shoreX - 30, viewH);
+      ctx.closePath();
+      ctx.clip();
+
+      // Water base reflection gradient
+      const waterGrad = ctx.createLinearGradient(0, waterY, 0, viewH);
+      waterGrad.addColorStop(0, sky.horizon);
+      waterGrad.addColorStop(0.5, sky.mid);
+      waterGrad.addColorStop(1, `#070c17`);
+      ctx.fillStyle = waterGrad;
+      ctx.fillRect(shoreX - 30, waterY - 10, viewW - shoreX + 40, viewH - waterY + 20);
+
+      // Dark nocturnal water veil
+      ctx.fillStyle = `rgba(6, 12, 24, 0.36)`;
+      ctx.fillRect(shoreX - 30, waterY - 10, viewW - shoreX + 40, viewH - waterY + 20);
+
+      // Reflected stars on lake surface
+      for (let i = 0; i < bgStars.length; i++) {
+        const st = bgStars[i];
+        if (st.xNorm < 0.48) continue;
+        const ry = waterY + (waterY - st.yNorm * viewH) * 0.55;
+        if (ry < waterY || ry > viewH) continue;
+        const shimmerX = st.xNorm * viewW + Math.sin(now * 0.004 + ry * 0.12) * 4;
+        const twinkle = 0.2 + 0.35 * (0.5 + 0.5 * Math.sin(now * 0.002 * st.speed + st.phase));
+        ctx.fillStyle = st.tint;
+        ctx.globalAlpha = twinkle;
+        ctx.fillRect(shimmerX - st.r, ry, st.r * 2.4, 1.3);
+      }
+      ctx.globalAlpha = 1;
+
+      // Reflected Orbits on lake surface
+      drawOrbitsAndStars(ctx, now, true);
+
+      // Reflected Paper Boats
+      for (let i = 0; i < appState.paperBoats.length; i++) {
+        const boat = appState.paperBoats[i];
+        drawPaperBoat(ctx, boat.xNorm * viewW, waterY + 5, boat.phase, true);
+      }
+
+      // Water surface shimmer lines
+      ctx.strokeStyle = `rgba(242, 236, 225, 0.09)`;
+      ctx.lineWidth = 1;
+      for (let r = 0; r < 14; r++) {
+        const ly = waterY + 12 + r * 14;
+        const lx = shoreX + 20 + ((r * 73) % Math.max(40, viewW - shoreX - 40)) + Math.sin(now * 0.001 + r) * 14;
+        ctx.beginPath();
+        ctx.moveTo(lx, ly);
+        ctx.lineTo(lx + 26 + (r % 3) * 12, ly);
+        ctx.stroke();
+      }
+
+      // Water Ripples
+      for (let i = appState.ripples.length - 1; i >= 0; i--) {
+        const rp = appState.ripples[i];
+        rp.r += dt * 36;
+        rp.alpha -= dt * 0.55;
+        if (rp.alpha <= 0 || rp.r >= rp.maxR) {
+          appState.ripples.splice(i, 1);
+          continue;
+        }
+        ctx.strokeStyle = `rgba(190, 226, 248, ${rp.alpha * 0.65})`;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.ellipse(rp.x, rp.y, rp.r, rp.r * 0.28, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // Subtle curved shoreline glow
+      ctx.save();
+      ctx.strokeStyle = `rgba(124, 196, 232, 0.22)`;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(shoreX - 6, waterY);
+      ctx.bezierCurveTo(shoreX + viewW * 0.08, waterY - 4, viewW * 0.84, waterY - 3, viewW, waterY + 6);
+      ctx.stroke();
+      ctx.restore();
+
+      // 8. Background Distant Hill Silhouette
+      ctx.save();
+      ctx.fillStyle = `rgba(10, 16, 30, 0.72)`;
+      ctx.beginPath();
+      ctx.moveTo(0, viewH);
+      for (let x = 0; x <= shoreX + 40; x += 16) {
+        const y = getHillSurfaceY(x) - 18 - Math.sin(x * 0.008) * 10;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(shoreX + 40, viewH);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      // 9. Foreground Organic Hill (Left) + Far Right Curved Lake Bank
+      ctx.save();
+      const hillGrad = ctx.createLinearGradient(0, viewH * 0.5, 0, viewH);
+      hillGrad.addColorStop(0, `#132328`);
+      hillGrad.addColorStop(0.55, `#0b151c`);
+      hillGrad.addColorStop(1, `#060b12`);
+      ctx.fillStyle = hillGrad;
+      ctx.beginPath();
+      ctx.moveTo(0, viewH);
+      for (let x = 0; x <= shoreX + 18; x += 8) {
+        ctx.lineTo(x, getHillSurfaceY(x));
+      }
+      ctx.lineTo(shoreX + 26, viewH);
+      ctx.closePath();
+      ctx.fill();
+
+      // Curved far-right reed bank rounding the lake
+      ctx.beginPath();
+      ctx.moveTo(viewW * 0.92, viewH);
+      ctx.quadraticCurveTo(viewW * 0.95, waterY - 6, viewW, waterY - 12);
+      ctx.lineTo(viewW, viewH);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      // 10. Swaying Grass Blades along Hill
+      ctx.save();
+      ctx.strokeStyle = `rgba(62, 114, 92, 0.72)`;
+      ctx.lineWidth = 1.3;
+      for (let i = 0; i < grassBlades.length; i++) {
+        const g = grassBlades[i];
+        const gx = g.xNorm * viewW;
+        const gy = getHillSurfaceY(gx);
+        const sway = Math.sin(now * 0.002 + g.phase) * 3.5;
+        ctx.beginPath();
+        ctx.moveTo(gx, gy + 2);
+        ctx.quadraticCurveTo(gx + g.lean * 0.5, gy - g.len * 0.5, gx + g.lean + sway, gy - g.len);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // 11. Floating Paper Boats on Lake
+      for (let i = 0; i < appState.paperBoats.length; i++) {
+        const boat = appState.paperBoats[i];
+        drawPaperBoat(ctx, boat.xNorm * viewW, waterY + 5, boat.phase, false);
+      }
+
+      // 12. Fallen Stars on Hill & Lake
+      for (let i = 0; i < appState.fallenStars.length; i++) {
+        const fs = appState.fallenStars[i];
+        const fx = fs.xNorm * viewW;
+        const fy = fs.landOnLake ? waterY + 2 + Math.sin(now * 0.003 + fs.phase) * 2 : getHillSurfaceY(fx) - 6;
+        const pulse = 0.7 + 0.3 * Math.sin(now * 0.004 + fs.phase);
+
+        const fGrad = ctx.createRadialGradient(fx, fy, 1, fx, fy, 18 * pulse);
+        const starTint = fs.payload.kind === `user` ? `rgba(124, 196, 232, ` : `rgba(223, 170, 91, `;
+        fGrad.addColorStop(0, `rgba(255, 250, 240, 0.95)`);
+        fGrad.addColorStop(0.45, starTint + `0.55)`);
+        fGrad.addColorStop(1, starTint + `0)`);
+        ctx.fillStyle = fGrad;
+        ctx.beginPath();
+        ctx.arc(fx, fy, 18 * pulse, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = `#fffaf0`;
+        ctx.beginPath();
+        ctx.arc(fx, fy, 3.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 13. Other Players (Black Silhouette + Unique Accessory)
+      const peers = getActiveRoomMembers(appState.currentPlanet);
+      for (let i = 0; i < peers.length; i++) {
+        const peer = peers[i];
+        const px = peer.xNorm * viewW;
+        const py = getWalkableSurfaceY(px) + (peer.yOffset || 0);
+        drawCloakedTraveler(ctx, px, py, {
+          isMine: false,
+          isAdmin: false,
+          accessory: peer.accessory,
+          wetRatio: peer.wetRatio || 0,
+          facing: peer.facing || 1,
+          walkPhase: peer.walkPhase || 0,
+          name: peer.name
+        });
+      }
+
+      // 14. My Character (White outline glow + Name tag + Admin Red Cloak if unlocked)
+      const myPx = appState.player.xNorm * viewW;
+      const myPy = getWalkableSurfaceY(myPx) + appState.player.yOffset;
+      drawCloakedTraveler(ctx, myPx, myPy, {
+        isMine: true,
+        isAdmin: appState.isAdmin,
+        accessory: `none`,
+        wetRatio: appState.player.wetRatio,
+        facing: appState.player.facing,
+        walkPhase: appState.player.walkPhase,
+        name: appState.playerName
+      });
+
+      // Wet cloak droplets
+      for (let i = appState.waterDroplets.length - 1; i >= 0; i--) {
+        const dr = appState.waterDroplets[i];
+        dr.y += dr.vy * dt;
+        dr.alpha -= dt * 1.4;
+        if (dr.alpha <= 0) {
+          appState.waterDroplets.splice(i, 1);
+          continue;
+        }
+        ctx.fillStyle = `rgba(124, 196, 232, ${dr.alpha})`;
+        ctx.beginPath();
+        ctx.arc(dr.x, dr.y, 1.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 15. Fireflies over the Hill
+      for (let i = 0; i < fireflies.length; i++) {
+        const f = fireflies[i];
+        const fx = f.xNorm * viewW;
+        const fy = getHillSurfaceY(fx) - f.yOffset;
+        const glow = 0.25 + 0.75 * (0.5 + 0.5 * Math.sin(now * 0.0028 + f.phase));
+        const ffGrad = ctx.createRadialGradient(fx, fy, 0.5, fx, fy, 9);
+        ffGrad.addColorStop(0, `rgba(226, 245, 138, ${glow})`);
+        ffGrad.addColorStop(1, `rgba(226, 245, 138, 0)`);
+        ctx.fillStyle = ffGrad;
+        ctx.beginPath();
+        ctx.arc(fx, fy, 9, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 16. Emotion Star Particles (Warmth, Comfort, Gratitude)
+      for (let i = appState.emotionParticles.length - 1; i >= 0; i--) {
+        const ep = appState.emotionParticles[i];
+        ep.t += dt * ep.speed;
+        if (ep.t >= 1) {
+          appState.emotionParticles.splice(i, 1);
+          continue;
+        }
+        const ease = 1 - Math.pow(1 - ep.t, 3);
+        const ex = ep.x + (ep.tx - ep.x) * ease;
+        const arcY = Math.sin(ep.t * Math.PI) * 58;
+        const ey = ep.y + (ep.ty - ep.y) * ease - arcY;
+        ctx.save();
+        ctx.globalAlpha = 1 - ep.t * 0.65;
+        ctx.fillStyle = ep.color;
+        ctx.beginPath();
+        ctx.arc(ex, ey, ep.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // 17. Release Light Particles
+      for (let i = appState.releaseParticles.length - 1; i >= 0; i--) {
+        const rp = appState.releaseParticles[i];
+        rp.x += rp.vx * dt;
+        rp.y += rp.vy * dt;
+        rp.alpha -= dt * 0.65;
+        if (rp.alpha <= 0) {
+          appState.releaseParticles.splice(i, 1);
+          continue;
+        }
+        ctx.fillStyle = `rgba(245, 220, 176, ${rp.alpha})`;
+        ctx.beginPath();
+        ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(renderFrame);
+    }
+
+    /* =========================================================================
+       18. Bootstrap
+       ========================================================================= */
+    async function initApp() {
+      if (window.lucide && typeof window.lucide.createIcons === `function`) {
+        window.lucide.createIcons();
+      }
+      initAmbientSceneParticles();
+      initFellowTravelers();
+      resizeCanvas();
+      window.addEventListener(`resize`, resizeCanvas);
+
+      initJoystick();
+      await loadPersistedState();
+
+      // Announce presence & auto-route planet room (max 5 per room)
+      sendMyPresence();
+      setTimeout(assignPlanetRoomOnJoin, 250);
+      setInterval(sendMyPresence, 2000);
+
+      requestAnimationFrame(renderFrame);
+
+      if (window.notebookAppApi && typeof window.notebookAppApi.notifyAppReady === `function`) {
+        window.notebookAppApi.notifyAppReady();
+      }
+    }
+
+    initApp();
+  </script>
+</body>
+</html>
